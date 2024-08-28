@@ -1,4 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+
+import 'dotenv/config'
+
 export default defineNuxtConfig({
   compatibilityDate: '2024-04-03',
   devtools: { enabled: true },
@@ -6,9 +9,9 @@ export default defineNuxtConfig({
     '/api/**': { cors: true },
   },
   runtimeConfig: {
-    notionToken: "",
-    databaseId: "",
-    apiHost: "",
+    notionToken: process.env.NXUT_NOTION_TOKEN,
+    databaseId: process.env.NXUT_DATABASE_ID,
+    apiHost: process.env.NXUT_API_HOST,
   },
 
   typescript: {
