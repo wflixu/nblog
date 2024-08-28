@@ -1,7 +1,8 @@
-const url = `${import.meta.env.VITE_API_HOST}/databases/${import.meta.env.VITE_DATABASE_ID}/query`;
-const notionToken = import.meta.env.VITE_NOTION_TOKEN;
+
 
 export default defineEventHandler(async (event) => {
+    const url = `${import.meta.env.VITE_API_HOST}/databases/${import.meta.env.VITE_DATABASE_ID}/query`;
+    const notionToken = import.meta.env.VITE_NOTION_TOKEN;
     console.log('api start', notionToken)
     return new Promise((resolve, reject) => {
         fetch(url, {
