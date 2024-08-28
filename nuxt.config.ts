@@ -2,7 +2,10 @@
 export default defineNuxtConfig({
   compatibilityDate: '2024-04-03',
   devtools: { enabled: true },
-
+  routeRules: {
+    '/': { prerender: true },
+    '/api/**': { cors: true },
+  },
   runtimeConfig: {
     ntoken: "",
     host: "https://api.notion.com/v1/"
