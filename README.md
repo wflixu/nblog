@@ -1,75 +1,32 @@
-# Nuxt 3 Minimal Starter
+# Notion Database to Nuxt Blog
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Use notion database as CMS for your blog.
 
-## Setup
 
-Make sure to install the dependencies:
+## Use
 
-```bash
-# npm
-npm install
+clone this repo and modify the env file to your own notion database id and token.
 
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
 ```
 
-## Development Server
+VITE_NOTION_TOKEN=""
+VITE_DATABASE_ID="12476b6af58e48b896720a8f89"
+VITE_API_HOST="https://api.notion.com/v1"
 
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm run dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
 ```
 
-## Production
 
-Build the application for production:
+## Preview
 
-```bash
-# npm
-npm run build
+![](./public/imgs/preview-1.png)
+![](./public/imgs/preview-2.png)
 
-# pnpm
-pnpm run build
 
-# yarn
-yarn build
 
-# bun
-bun run build
-```
+## Reference
 
-Locally preview production build:
+- [Notion API](https://developers.notion.com/reference/intro)
+- [Postman Notion API](https://www.postman.com/notionhq/)
+- [Nuxt.js](https://nuxtjs.org/)
 
-```bash
-# npm
-npm run preview
 
-# pnpm
-pnpm run preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
