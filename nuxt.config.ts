@@ -4,7 +4,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
 
   runtimeConfig: {
-    ntoken: "secret_hBeMb2fQgDz63o37k4V7P2EQVbkBRuPuIH3TR954rUT",
+    ntoken: "",
     host: "https://api.notion.com/v1/"
   },
 
