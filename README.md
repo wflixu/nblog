@@ -15,6 +15,11 @@ VITE_API_HOST="https://api.notion.com/v1"
 
 ```
 
+## Plan
+
+- [ ] Theme switcher
+- [ ] Table of Contents in detail page
+- [ ] notion block data render
 
 ## Preview
 
