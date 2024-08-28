@@ -1,7 +1,7 @@
 
 
 export default defineEventHandler(async (event) => {
-    const config = useRuntimeConfig();
+    const config = useRuntimeConfig(event);
     const url = `${config.apiHost}/databases/${config.databaseId}/query`;
     console.log('api start', config.notionToken)
     return new Promise((resolve, reject) => {

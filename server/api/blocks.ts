@@ -3,7 +3,7 @@
 export default defineEventHandler(async (event) => {
 
     const id = getQuery(event).id
-    const config = useRuntimeConfig()
+    const config = useRuntimeConfig(event)
 
     const url = config.apiHost + `/blocks/${id}/children?page_size=100`;
 
