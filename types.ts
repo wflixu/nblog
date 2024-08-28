@@ -61,7 +61,7 @@ export interface INBlockProps {
 
 
 interface ImportMetaEnv {
-    readonly VITE_APP_TITLE: string
+    readonly NUXT_APP_TITLE: string
     // more env variables...
 }
 

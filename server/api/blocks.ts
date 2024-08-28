@@ -3,10 +3,11 @@
 export default defineEventHandler(async (event) => {
 
     const id = getQuery(event).id
+    const config = useRuntimeConfig()
 
-    const url = import.meta.env.VITE_API_HOST + `/blocks/${id}/children?page_size=100`;
+    const url = config.apiHost + `/blocks/${id}/children?page_size=100`;
 
-    const notionToken = import.meta.env.VITE_NOTION_TOKEN
+    const notionToken = config.notionToken
 
     return new Promise((resolve, reject) => {
 

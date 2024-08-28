@@ -9,9 +9,9 @@ clone this repo and modify the env file to your own notion database id and token
 
 ```
 
-VITE_NOTION_TOKEN=""
-VITE_DATABASE_ID="12476b6af58e48b896720a8f89"
-VITE_API_HOST="https://api.notion.com/v1"
+NUXT_NOTION_TOKEN=""
+NUXT_DATABASE_ID="12476b6af58e48b896720a8f89"
+NUXT_API_HOST="https://api.notion.com/v1"
 
 ```
 

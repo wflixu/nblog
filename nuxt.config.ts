@@ -6,8 +6,9 @@ export default defineNuxtConfig({
     '/api/**': { cors: true },
   },
   runtimeConfig: {
-    ntoken: "",
-    host: "https://api.notion.com/v1/"
+    notionToken: "",
+    databaseId: "",
+    apiHost: "",
   },
 
   typescript: {

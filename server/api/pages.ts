@@ -1,14 +1,14 @@
 
 
 export default defineEventHandler(async (event) => {
-    const url = `${import.meta.env.VITE_API_HOST}/databases/${import.meta.env.VITE_DATABASE_ID}/query`;
-    const notionToken = import.meta.env.VITE_NOTION_TOKEN;
-    console.log('api start', notionToken)
+    const config = useRuntimeConfig();
+    const url = `${config.apiHost}/databases/${config.databaseId}/query`;
+    console.log('api start', config.notionToken)
     return new Promise((resolve, reject) => {
         fetch(url, {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${notionToken}`,
+                'Authorization': `Bearer ${config.notionToken}`,
                 'Content-Type': 'application/json',
                 'Notion-Version': '2022-06-28'
             },
