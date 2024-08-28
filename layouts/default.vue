@@ -5,7 +5,7 @@
 
   <header>
     <div class="logo">
-      <NuxtImg src="/imgs/logo.png" width="24" height="24" />
+      <img src="/imgs/logo.png" width="24" height="24" />
       <span>
         Today blog
       </span>
