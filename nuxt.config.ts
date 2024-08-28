@@ -28,6 +28,5 @@ export default defineNuxtConfig({
       title: "Today Blog"
     }
   },
-
   modules: ["@nuxt/image", "@nuxt/icon"]
 })
