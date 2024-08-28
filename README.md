@@ -1,37 +1,36 @@
-# Notion Database to Nuxt Blog
+This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-Use notion database as CMS for your blog.
+## Getting Started
 
+First, run the development server:
 
-## Use
-
-clone this repo and modify the env file to your own notion database id and token.
-
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
 ```
 
-NUXT_NOTION_TOKEN=""
-NUXT_DATABASE_ID="12476b6af58e48b896720a8f89"
-NUXT_API_HOST="https://api.notion.com/v1"
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-```
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-## Plan
+This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
-- [ ] Theme switcher
-- [ ] Table of Contents in detail page
-- [ ] notion block data render
+## Learn More
 
-## Preview
+To learn more about Next.js, take a look at the following resources:
 
-![](./public/imgs/preview-1.png)
-![](./public/imgs/preview-2.png)
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
+## Deploy on Vercel
 
-## Reference
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-- [Notion API](https://developers.notion.com/reference/intro)
-- [Postman Notion API](https://www.postman.com/notionhq/)
-- [Nuxt.js](https://nuxtjs.org/)
-
-
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.

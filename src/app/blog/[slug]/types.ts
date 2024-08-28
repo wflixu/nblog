@@ -1,4 +1,4 @@
-/// <reference types="vite/client" />
+
 
 export interface IAnnotation {
     bold: boolean;
@@ -58,13 +58,3 @@ export interface INBlockProps {
 }
 
 
-
-
-interface ImportMetaEnv {
-    readonly NUXT_APP_TITLE: string
-    // more env variables...
-}
-
-interface ImportMeta {
-    readonly env: ImportMetaEnv
-}
