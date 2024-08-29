@@ -7,6 +7,7 @@ const pageSize = 10
 export default defineConfig({
     title: 'Today',
     base: '/',
+    outDir: 'dist',
     cacheDir: './node_modules/vitepress_cache',
     description: 'vitepress,blog,blog-theme',
     ignoreDeadLinks: true,
@@ -40,7 +41,7 @@ export default defineConfig({
 
     vite: {
         //build: { minify: false }
-        server: { port: 5000 }
+        server: { port: 5000 },
     }
     /*
       optimizeDeps: {
