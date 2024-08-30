@@ -1,36 +1,37 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Blog powered by VitePress and Notion
 
-## Getting Started
+[Live Demo](http://blog.wflixu.cn)
 
-First, run the development server:
+## 动机
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+之前用过很多的 blog 程序，比如 hexo,astro，nextjs 等，这些程序发布完成了，下次写blog就忘记了，一般在项目中写 markdown 文件，体验不好，自己以后总结和查看都不方便，一直想找一个编辑体验如 Notion Obsidian 的笔记软件，展示可以自定义样式，现在用 Vitepress + Notion ，终于实现了这个功能，Notion 作为 markdown 编辑器 和 blog CMS，Vitepress 作为博客渲染器，完美结合。
+
+
+## 使用方法
+
+
+
+1. 安装依赖 和 just 工具
+
+```
+npm install -g pnpm just
+
+pnpm install
+
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+2. 在 justfile 中 配置 notion token 和 blog 用的 database ID
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
-## Learn More
 
-To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+3. 执行 `just dev` 即可查看效果,
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+## 感谢
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+这个仓库是 根据 [airene vitepress-blog-pure](https://github.com/airene/vitepress-blog-pure) 改造的，原来是用本地md 文档管理博客，因为 vitpress 有SSG 的功能，改造成用Notion作为编辑端和管理端，vitepress 作为博客的渲染器，这样可以更好的管理博客文章，写博文是编辑体验更好。
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+
