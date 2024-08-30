@@ -16,7 +16,7 @@ export default defineConfig({
         website: 'https://github.com/wflixu/nblog', //copyright link
         // 评论的仓库地址
         comment: {
-            repo: 'airene/vitepress-blog-pure',
+            repo: 'wflixu/nblog',
             themes: 'github-light',
             issueTerm: 'pathname'
         },
@@ -26,7 +26,6 @@ export default defineConfig({
             { text: 'Archives', link: '/pages/archives' },
             { text: 'Tags', link: '/pages/tags' },
             { text: 'About', link: '/pages/about' }
-            // { text: 'Airene', link: 'http://airene.net' }  -- External link test
         ],
         search: {
             provider: 'local',
