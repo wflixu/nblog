@@ -18,7 +18,7 @@ onMounted(() => {
         }
         //hack method to change utterances theme when change site theme
         watch(isDark, (newVal, oldVal) => {
-            if (newVal !== oldVal) location.replace(location.href)
+            if (newVal !== oldVal) window.location.replace(window.location.href)
         })
     })
 })
