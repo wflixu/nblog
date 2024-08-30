@@ -2,12 +2,14 @@ import { globby } from 'globby'
 import matter from 'gray-matter'
 import fs from 'fs-extra'
 import { resolve } from 'path'
-import serverConfig from '../../api.config'
+
+
+const API_HOST = 'https://api.notion.com/v1'
 
 async function getPosts(pageSize: number) {
-    const apiHost = serverConfig.API_HOST
-    const databaseId = serverConfig.DATABASE_ID
-    const notionToken = serverConfig.NOTION_TOKEN
+    const apiHost = API_HOST
+    const databaseId = process.env.DATABASE_ID;
+    const notionToken = process.env.NOTION_TOKEN;
     const url = `${apiHost}/databases/${databaseId}/query`;
 
     const results = await fetch(url, {
@@ -99,4 +101,4 @@ function _compareDate(obj1: { frontMatter: { date: number } }, obj2: { frontMatt
     return obj1.frontMatter.date < obj2.frontMatter.date ? 1 : -1
 }
 
-export { getPosts }
+export { getPosts, API_HOST }

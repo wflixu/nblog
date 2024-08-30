@@ -1,11 +1,10 @@
 
-import apiConfig from '../api.config'
 
 export default {
     async paths() {
-        const apiHost = apiConfig.API_HOST
-        const databaseId = apiConfig.DATABASE_ID
-        const notionToken = apiConfig.NOTION_TOKEN
+        const apiHost = process.env.API_HOST
+        const databaseId = process.env.DATABASE_ID
+        const notionToken = process.env.NOTION_TOKEN
         const url = `${apiHost}/databases/${databaseId}/query`;
 
         const results = await fetch(url, {
