@@ -1,4 +1,7 @@
 
+import path from 'path';
+import axios from 'axios';
+import { promises as fs } from 'fs';
 
 export default {
     async paths() {
@@ -55,6 +58,35 @@ export default {
                 console.error(error)
                 return error
             })
+            const outputDir = 'public/images'
+            blocks.forEach(async (block) => {
+                if(block.type == 'image') {
+                    let originUrl = block?.image?.file?.url
+                    if(!originUrl) {
+                        return
+                    }
+                    const filename = path.basename(new URL(originUrl).pathname);
+                    const cachedFileName = `${block.id}${filename}`;
+                    const outputPath = path.join(outputDir, cachedFileName);
+                    let isCached = await fs.access(outputPath).then(() => true).catch(() => false);
+                    if (isCached) {
+                        block.image.file.url = `/images/${cachedFileName}`
+                        return;
+                    }
+                    try {
+                        const response = await axios.get(originUrl, { responseType: 'arraybuffer' });
+                        await fs.mkdir(outputDir, { recursive: true });
+                        await fs.writeFile(outputPath, response.data);
+                
+                        console.log(`Downloaded image from ${block.id}: ${originUrl}`);
+                         
+                        block.image.file.url = `/images/${block.id}${filename}`
+                      } catch (error) {
+                        console.error(`Failed to cache image: ${originUrl}`, error);
+                      }
+                    
+                }
+            });
             pageBlock[id] = blocks
         }
 

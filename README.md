@@ -28,6 +28,8 @@ pnpm install
 
 3. 执行 `just dev` 即可查看效果,
 
+4. 构建 `just build`
+
 
 ## 感谢
 
