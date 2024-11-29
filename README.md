@@ -1,4 +1,5 @@
 # Blog powered by VitePress and Notion
+![](./public/favicon.svg)
 
 [Live Demo](http://blog.wflixu.cn)
 
@@ -23,7 +24,16 @@ pnpm install
 
 2. 在 justfile 中 配置 notion token 和 blog 用的 database ID
 
+```
+// justfile
 
+set export
+
+NOTION_TOKEN := ""
+DATABASE_ID := "12476b6af58e41738258b896720a8f89"
+API_HOST := "https://api.notion.com/v1"
+
+```
 
 
 3. 执行 `just dev` 即可查看效果,
