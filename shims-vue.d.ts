@@ -1,3 +1,5 @@
+/// <reference types="vite/client" />
+/// <reference types="vitepress/client" />
 declare module '*.vue' {
     import { DefineComponent } from 'vue'
     const component: DefineComponent<{}, {}, any>

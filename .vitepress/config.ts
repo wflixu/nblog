@@ -2,7 +2,6 @@ import { defineConfig } from 'vitepress'
 import { getPosts } from './theme/serverUtils'
 
 
-
 //每页的文章数量
 const pageSize = 10
 
@@ -13,6 +12,9 @@ export default defineConfig({
     cacheDir: './node_modules/vitepress_cache',
     description: 'vitepress,blog,blog-theme',
     ignoreDeadLinks: true,
+    head: [
+        ['link', { rel: 'icon', type: 'image/*', href: '/favicon.svg' }]
+    ],
     themeConfig: {
         posts: await getPosts(pageSize),
         website: 'https://github.com/wflixu/nblog', //copyright link
@@ -39,7 +41,6 @@ export default defineConfig({
         socialLinks: [{ icon: 'github', link: 'https://github.com/wflixu/nblog' }]
     } as any,
     srcExclude: ['README.md'], // exclude the README.md , needn't to compiler
-
     vite: {
         //build: { minify: false }
         server: { port: 5000 },

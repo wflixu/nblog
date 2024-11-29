@@ -4,10 +4,9 @@ import fs from 'fs-extra'
 import { resolve } from 'path'
 
 
-const API_HOST = 'https://api.notion.com/v1'
 
 async function getPosts(pageSize: number) {
-    const apiHost = API_HOST
+    const apiHost = process.env.API_HOST
     const databaseId = process.env.DATABASE_ID;
     const notionToken = process.env.NOTION_TOKEN;
     const url = `${apiHost}/databases/${databaseId}/query`;

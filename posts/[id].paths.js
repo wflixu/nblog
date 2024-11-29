@@ -58,7 +58,7 @@ export default {
                 console.error(error)
                 return error
             })
-            const outputDir = 'public/images'
+            const outputDir = 'public/assets/images'
             blocks.forEach(async (block) => {
                 if(block.type == 'image') {
                     let originUrl = block?.image?.file?.url
@@ -70,7 +70,7 @@ export default {
                     const outputPath = path.join(outputDir, cachedFileName);
                     let isCached = await fs.access(outputPath).then(() => true).catch(() => false);
                     if (isCached) {
-                        block.image.file.url = `/images/${cachedFileName}`
+                        block.image.file.url = `/assets/images/${cachedFileName}`
                         return;
                     }
                     try {
@@ -80,7 +80,7 @@ export default {
                 
                         console.log(`Downloaded image from ${block.id}: ${originUrl}`);
                          
-                        block.image.file.url = `/images/${block.id}${filename}`
+                        block.image.file.url = `/assets/images/${block.id}${filename}`
                       } catch (error) {
                         console.error(`Failed to cache image: ${originUrl}`, error);
                       }
@@ -93,6 +93,7 @@ export default {
         return results.map((pkg) => {
             return {
                 params: {
+                    pkg: pkg.id,
                     id: pkg.id,
                     title: pkg.properties.Title?.title[0]?.plain_text ?? '888',
                     blocks: pageBlock[pkg.id]
