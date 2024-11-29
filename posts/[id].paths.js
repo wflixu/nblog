@@ -39,7 +39,7 @@ export default {
 
         for (const element of results) {
             const id = element.id
-            const url = apiHost + `/blocks/${id}/children?page_size=100`;
+            const url = apiHost + `/blocks/${id}/children?page_size=1000`;
             let blocks = await fetch(url, {
                 method: 'GET',
                 headers: {

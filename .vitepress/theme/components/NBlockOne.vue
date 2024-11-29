@@ -11,6 +11,9 @@
     <template v-else-if="props.image">
         <NBlockImage v-bind="props.image" :key="props.id"></NBlockImage>
     </template>
+    <template v-else-if="props.bulleted_list_item">
+        <NBlockBullet v-bind="props.bulleted_list_item" :key="props.id"></NBlockBullet>
+    </template>
 </template>
 
 <script setup > 
@@ -24,6 +27,7 @@ const props = defineProps({
         require: true
     },
     paragraph :Object,
+    bulleted_list_item :Object,
     heading_1: Object,
     code: Object,
     heading_2: Object,
