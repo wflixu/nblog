@@ -15,6 +15,10 @@ export default defineConfig({
     head: [
         ['link', { rel: 'icon', type: 'image/*', href: '/favicon.svg' }]
     ],
+    sitemap: {
+        hostname: 'https://blog.wflixu.cn',
+        lastmodDateOnly: false
+    },
     themeConfig: {
         posts: await getPosts(pageSize),
         website: 'https://github.com/wflixu/nblog', //copyright link
