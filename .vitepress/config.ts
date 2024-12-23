@@ -13,7 +13,12 @@ export default defineConfig({
     description: 'vitepress,blog,blog-theme',
     ignoreDeadLinks: true,
     head: [
-        ['link', { rel: 'icon', type: 'image/*', href: '/favicon.svg' }]
+        ['link', { rel: 'icon', type: 'image/*', href: '/favicon.svg' }],
+        [
+            'script',
+            { defer: '', src: 'https://static.cloudflareinsights.com/beacon.min.js', 'data-cf-beacon': '{"token": "5d1014e67a9c4a1a82bdb180c4f8f008"}' }
+        ],
+
     ],
     sitemap: {
         hostname: 'https://blog.wflixu.cn',
