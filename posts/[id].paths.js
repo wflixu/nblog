@@ -1,4 +1,3 @@
-
 import path from 'path';
 import axios from 'axios';
 import { promises as fs } from 'fs';
@@ -42,22 +41,45 @@ export default {
 
         for (const element of results) {
             const id = element.id
-            const url = apiHost + `/blocks/${id}/children?page_size=1000`;
-            let blocks = await fetch(url, {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${notionToken}`,
-                    'Content-Type': 'application/json',
-                    'Notion-Version': '2022-06-28'
+            const cacheFilePath = path.join('.vitepress/cache', `${id}.json`);
+            let useCache = false;
+
+            try {
+                const cacheStats = await fs.stat(cacheFilePath);
+                const cacheModifiedTime = new Date(cacheStats.mtime);
+                const elementModifiedTime = new Date(element.last_edited_time);
+
+                if (cacheModifiedTime > elementModifiedTime) {
+                    useCache = true;
                 }
-            }).then(res => res.json()).then(data => {
-                console.log('get blocks success for pageid', id)
-                return data.results
-            }).catch(error => {
-                console.log('apierror')
-                console.error(error)
-                return error
-            })
+            } catch (error) {
+                // Cache file does not exist
+            }
+
+            let blocks;
+            if (useCache) {
+                blocks = JSON.parse(await fs.readFile(cacheFilePath, 'utf-8'));
+            } else {
+                const url = apiHost + `/blocks/${id}/children?page_size=1000`;
+                blocks = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${notionToken}`,
+                        'Content-Type': 'application/json',
+                        'Notion-Version': '2022-06-28'
+                    }
+                }).then(res => res.json()).then(data => {
+                    console.log('get blocks success for pageid', id)
+                    return data.results
+                }).catch(error => {
+                    console.log('apierror')
+                    console.error(error)
+                    return error
+                });
+
+                await fs.mkdir(path.dirname(cacheFilePath), { recursive: true });
+                await fs.writeFile(cacheFilePath, JSON.stringify(blocks));
+            }
             const outputDir = 'public/assets/images'
             blocks.forEach(async (block) => {
                 if(block.type == 'image') {
@@ -66,7 +88,7 @@ export default {
                         return
                     }
                     const filename = path.basename(new URL(originUrl).pathname);
-                    const cachedFileName = `${block.id}${filename}`;
+                    const cachedFileName = `${block.id}__${filename}`;
                     const outputPath = path.join(outputDir, cachedFileName);
                     let isCached = await fs.access(outputPath).then(() => true).catch(() => false);
                     if (isCached) {

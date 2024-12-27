@@ -1,5 +1,4 @@
-import { globby } from 'globby'
-import matter from 'gray-matter'
+
 import fs from 'fs-extra'
 import { resolve } from 'path'
 
@@ -82,9 +81,9 @@ const { theme } = useData();
 const posts = theme.value.posts.slice(${pageSize * (i - 1)},${pageSize * i})
 </script>
 <Page :posts="posts" :pageCurrent="${i}" :pagesNum="${pagesNum}" />
-`.trim()
+`
             const file = paths + `/page_${i}.md`
-            await fs.writeFile(file, page)
+            await fs.writeFile(file, page.trim())
         }
     }
     // rename page_1 to index for homepage
@@ -100,4 +99,4 @@ function _compareDate(obj1: { frontMatter: { date: number } }, obj2: { frontMatt
     return obj1.frontMatter.date < obj2.frontMatter.date ? 1 : -1
 }
 
-export { getPosts, API_HOST }
+export { getPosts }
