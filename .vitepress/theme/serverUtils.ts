@@ -161,12 +161,16 @@ const posts = theme.value.posts.slice(${pageSize * (i - 1)},${pageSize * i})
 </script>
 <Page :posts="posts" :pageCurrent="${i}" :pagesNum="${pagesNum}" />
 `
-            const file = paths + `/page_${i}.md`
-            await fs.writeFile(file, page.trim())
+
+            if (i === 1) {
+                const file = paths + `/index.md`
+                await fs.writeFile(file, page.trim())
+            } else {
+                const file = paths + `/page_${i}.md`
+                await fs.writeFile(file, page.trim())
+            }
         }
     }
-    // rename page_1 to index for homepage
-    await fs.move(paths + '/page_1.md', paths + '/index.md', { overwrite: true })
 }
 
 function _convertDate(date = new Date().toString()) {
