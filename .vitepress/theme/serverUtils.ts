@@ -29,7 +29,12 @@ export async function getPageBlocks(pageId: string, last_edited_time: string) {
 
     let blocks = [];
     if (useCache) {
-        blocks = JSON.parse(await fs.readFile(cacheFilePath, 'utf-8'));
+        try {
+            let json = JSON.parse(await fs.readFile(cacheFilePath, 'utf-8'));
+            blocks = json ?? [];
+        } catch (error) {
+            console.error('error:', error)
+        }
     } else {
         const url = apiHost + `/blocks/${pageId}/children?page_size=1000`;
         blocks = await fetch(url, {
@@ -45,7 +50,7 @@ export async function getPageBlocks(pageId: string, last_edited_time: string) {
         }).catch(error => {
             console.log('apierror')
             console.error(error)
-            return error
+            return []
         });
 
         await fs.mkdir(path.dirname(cacheFilePath), { recursive: true });
