@@ -1,13 +1,92 @@
 
 import fs from 'fs-extra'
-import { resolve } from 'path'
+import path, { resolve } from 'path'
+import axios from 'axios';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+const apiHost = process.env.API_HOST
+const databaseId = process.env.DATABASE_ID;
+const notionToken = process.env.NOTION_TOKEN;
+
+export async function getPageBlocks(pageId: string, last_edited_time: string) {
+    console.log('getPageBlocks:', pageId)
+    const cacheFilePath = path.join('.vitepress/cache', `${pageId}.json`);
+    let useCache = false;
+
+    try {
+        const cacheStats = await fs.stat(cacheFilePath);
+        const cacheModifiedTime = new Date(cacheStats.mtime);
+        const elementModifiedTime = new Date(last_edited_time);
+
+        if (cacheModifiedTime > elementModifiedTime) {
+            useCache = true;
+        }
+    } catch (error) {
+        // Cache file does not exist
+    }
+
+    let blocks = [];
+    if (useCache) {
+        blocks = JSON.parse(await fs.readFile(cacheFilePath, 'utf-8'));
+    } else {
+        const url = apiHost + `/blocks/${pageId}/children?page_size=1000`;
+        blocks = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${notionToken}`,
+                'Content-Type': 'application/json',
+                'Notion-Version': '2022-06-28'
+            }
+        }).then(res => res.json()).then(data => {
+            console.log('get blocks success for pageid', pageId)
+            return data.results
+        }).catch(error => {
+            console.log('apierror')
+            console.error(error)
+            return error
+        });
+
+        await fs.mkdir(path.dirname(cacheFilePath), { recursive: true });
+        await fs.writeFile(cacheFilePath, JSON.stringify(blocks));
+    }
+    const outputDir = 'public/assets/images'
+    blocks.forEach(async (block) => {
+        if (block.type == 'image') {
+            let originUrl = block?.image?.file?.url
+            if (!originUrl) {
+                return
+            }
+            const filename = path.basename(new URL(originUrl).pathname);
+            const cachedFileName = `${block.id}__${filename}`;
+            const outputPath = path.join(outputDir, cachedFileName);
+            let isCached = await fs.access(outputPath).then(() => true).catch(() => false);
+            if (isCached) {
+                block.image.file.url = `/assets/images/${cachedFileName}`
+                return;
+            }
+            try {
+                const response = await axios.get(originUrl, { responseType: 'arraybuffer' });
+                await fs.mkdir(outputDir, { recursive: true });
+                await fs.writeFile(outputPath, response.data);
+
+                console.log(`Downloaded image from ${block.id}: ${originUrl}`);
+
+                block.image.file.url = `/assets/images/${block.id}${filename}`
+            } catch (error) {
+                console.error(`Failed to cache image: ${originUrl}`, error);
+            }
+
+        }
+    });
+
+    return blocks;
+}
 
 
 
 async function getPosts(pageSize: number) {
-    const apiHost = process.env.API_HOST
-    const databaseId = process.env.DATABASE_ID;
-    const notionToken = process.env.NOTION_TOKEN;
     const url = `${apiHost}/databases/${databaseId}/query`;
 
     const results = await fetch(url, {

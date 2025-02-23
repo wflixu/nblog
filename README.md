@@ -12,33 +12,36 @@
 
 
 
-1. 安装依赖 和 just 工具
+### 1. 安装依赖 
 
 ```
+pnpm install
+npm install
+
+# 可选 ，如果用just 命令，先安装
 npm install -g pnpm just
 
-pnpm install
-
 ```
 
-
-2. 在 justfile 中 配置 notion token 和 blog 用的 database ID
-
+### 2. 配置环境变量  NOTION_TOKEN、DATABASE_ID、API_HOST
+在.env 或 justfile 文件中配置 NOTION_TOKEN、DATABASE_ID、API_HOST
 ```
-// justfile
-
+# justfile
 set export
-
-NOTION_TOKEN := ""
-DATABASE_ID := "12476b6af58e41738258b896720a8f89"
+NOTION_TOKEN := "your token"
+DATABASE_ID := "your base id"
 API_HOST := "https://api.notion.com/v1"
 
+# .env
+NOTION_TOKEN="your token"
+DATABASE_ID="your base id"
+API_HOST="https://api.notion.com/v1"
 ```
 
 
-3. 执行 `just dev` 即可查看效果,
+### 3. 执行 `just dev` 或 `pnpm dev` 即可查看效果,
 
-4. 构建 `just build`
+### 4. 构建 `just build` 或 `pnpm build`
 
 
 ## 感谢

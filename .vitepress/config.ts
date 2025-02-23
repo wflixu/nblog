@@ -1,9 +1,32 @@
 import { defineConfig } from 'vitepress'
-import { getPosts } from './theme/serverUtils'
-
+import { getPageBlocks, getPosts } from './theme/serverUtils'
 
 //每页的文章数量
 const pageSize = 10
+
+function isValidJSON(jsonString) {
+    try {
+        JSON.parse(jsonString);
+        return true; // JSON 格式有效
+    } catch (error) {
+        return false; // JSON 格式无效
+    }
+}
+
+function fixInvalidJSON(jsonString) {
+    // 替换未引用的属性名和值
+    const fixedJson = jsonString
+        .replace(/([{,]\s*)([a-zA-Z0-9_]+)\s*:/g, '$1"$2":') // 属性名添加双引号
+        .replace(/:\s*([^"\d{[].*?)([,\]}])/g, ':"$1"$2') // 非引用的值加双引号
+        .replace(/(["'])((?:(?!\1).)*?)(["'])/g, (match, p1, p2, p3) => {
+            if (p1 === p3) return match; // 引号匹配，无需修改
+            return `"${p2}"`; // 替换为双引号
+        });
+
+    return fixedJson;
+}
+
+
 
 export default defineConfig({
     title: 'Today',
@@ -53,6 +76,31 @@ export default defineConfig({
     vite: {
         //build: { minify: false }
         server: { port: 5000 },
+    },
+    async transformPageData(pageData, { siteConfig }) {
+        console.log('pageData:', pageData.params)
+        if (pageData.params?.id && pageData.params?.last_edited_time) {
+            let blocks = await getPageBlocks(pageData.params.id, pageData.params.last_edited_time)
+            console.log('blocks:', blocks)
+
+            let blocksJson = '{}'
+            try {
+                blocksJson = JSON.stringify(blocks)
+                let isValid = isValidJSON(blocksJson)
+                if (!isValid) {
+                    blocksJson = fixInvalidJSON(blocksJson)
+                    blocks = JSON.parse(blocksJson)
+                }
+            } catch (error) {
+                console.warn('error:', error)
+            }
+            return {
+                blocks,
+            }
+        } else {
+            return {}
+        }
+
     }
     /*
       optimizeDeps: {
