@@ -6,7 +6,15 @@
       "Bash(ls:*)",
       "Bash(pnpm add:*)",
       "Bash(git commit:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(while read:*)",
+      "Bash(do if git show $hash:justfile)",
+      "Bash(then echo \"Found in: $hash $msg\")",
+      "Bash(fi:*)",
+      "Bash(done:*)",
+      "Bash(git remote add:*)",
+      "Bash(node -e \"\nconst dotenv = require\\(''dotenv''\\);\nconst path = require\\(''path''\\);\nconst envPath = path.resolve\\(process.cwd\\(\\), ''.env''\\);\nconst result = dotenv.config\\({ path: envPath }\\);\nconsole.log\\(''NOTION_TOKEN:'', process.env.NOTION_TOKEN ? ''✓ Found'' : ''✗ Missing''\\);\nconsole.log\\(''DATABASE_ID:'', process.env.DATABASE_ID ? ''✓ Found'' : ''✗ Missing''\\);\nconsole.log\\(''API_HOST:'', process.env.API_HOST || ''✗ Missing''\\);\n\")",
+      "Bash(pnpm remove:*)"
     ]
   }
 }

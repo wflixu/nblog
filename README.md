@@ -12,36 +12,64 @@
 
 
 
-### 1. 安装依赖 
+### 1. 安装依赖
 
-```
+```bash
 pnpm install
+# 或
 npm install
-
-# 可选 ，如果用just 命令，先安装
-npm install -g pnpm just
-
 ```
 
-### 2. 配置环境变量  NOTION_TOKEN、DATABASE_ID、API_HOST
-在.env 或 justfile 文件中配置 NOTION_TOKEN、DATABASE_ID、API_HOST
-```
-# justfile
-set export
-NOTION_TOKEN := "your token"
-DATABASE_ID := "your base id"
-API_HOST := "https://api.notion.com/v1"
+### 2. 配置环境变量
 
-# .env
-NOTION_TOKEN="your token"
-DATABASE_ID="your base id"
-API_HOST="https://api.notion.com/v1"
+复制 `.env.example` 文件为 `.env`，并填入你的 Notion API 配置：
+
+```bash
+cp .env.example .env
 ```
 
+编辑 `.env` 文件：
 
-### 3. 执行 `just dev` 或 `pnpm dev` 即可查看效果,
+```env
+NOTION_TOKEN=ntn_xxxxxxxxxxxx
+DATABASE_ID=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+API_HOST=https://api.notion.com/v1
+```
 
-### 4. 构建 `just build` 或 `pnpm build`
+#### 获取 Notion API Token
+
+1. 访问 [Notion Developers](https://www.notion.so/my-integrations)
+2. 点击 "New integration" 创建一个新的集成
+3. 复制 "Internal Integration Token"（格式：`ntn_...`）
+4. 将其填入 `.env` 文件的 `NOTION_TOKEN`
+
+#### 获取 Database ID
+
+1. 在 Notion 中打开你的博客数据库
+2. 从 URL 中复制 Database ID（32位字符）
+3. 将其填入 `.env` 文件的 `DATABASE_ID`
+
+#### ⚠️ 注意事项
+
+- **永远不要**将 `.env` 文件提交到 Git
+- `.env` 文件已经在 `.gitignore` 中，不会被提交
+- 只提交 `.env.example` 作为模板
+
+### 3. 启动开发服务器
+
+```bash
+pnpm run dev
+# 或
+npm run dev
+```
+
+### 4. 构建生产版本
+
+```bash
+pnpm run build
+# 或
+npm run build
+```
 
 
 ## 感谢

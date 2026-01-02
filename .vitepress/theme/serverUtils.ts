@@ -5,11 +5,27 @@ import axios from 'axios';
 import dotenv from 'dotenv';
 import { parse, stringify } from 'flatted';
 
-dotenv.config();
+// 加载环境变量，明确指定 .env 文件路径
+const envPath = path.resolve(process.cwd(), '.env');
+const result = dotenv.config({ path: envPath });
 
-const apiHost = process.env.API_HOST
+if (result.error) {
+    console.warn('Warning: .env file not found or cannot be read. Please create .env file with NOTION_TOKEN, DATABASE_ID, and API_HOST.');
+}
+
+const apiHost = process.env.API_HOST || 'https://api.notion.com/v1'
 const databaseId = process.env.DATABASE_ID;
 const notionToken = process.env.NOTION_TOKEN;
+
+// 验证必需的环境变量
+if (!notionToken || !databaseId) {
+    console.error('\n❌ Error: Missing required environment variables!');
+    console.error('Please create a .env file in the project root with the following content:');
+    console.error('  NOTION_TOKEN=your_notion_token');
+    console.error('  DATABASE_ID=your_database_id');
+    console.error('  API_HOST=https://api.notion.com/v1\n');
+    throw new Error('Missing NOTION_TOKEN or DATABASE_ID in environment variables');
+}
 
 export async function getPageBlocks(pageId: string, last_edited_time: string) {
     console.log('getPageBlocks:', pageId)

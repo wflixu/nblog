@@ -9,9 +9,9 @@ smartmontools.md
 zsh_history.md
 /*.md
 !CLAUDE.md
+!ENV_SETUP.md
 /package-lock.json
 origin_theme.css
 .vitepress/cache
 public/assets/images/*
-justfile
 .env
