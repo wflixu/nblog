@@ -50,6 +50,12 @@ export async function getPageBlocks(pageId: string, last_edited_time: string) {
             let json = parse(await fs.readFile(cacheFilePath, 'utf-8'));
             // 确保 flatted 解析的结果是数组
             blocks = Array.isArray(json) ? json : [];
+
+            // 验证缓存数据有效性
+            if (blocks.length === 0) {
+                console.warn('Cache is empty, will fetch from API');
+                useCache = false;
+            }
         } catch (error) {
             console.error('Cache parse error:', error);
             // 删除损坏的缓存
@@ -60,25 +66,52 @@ export async function getPageBlocks(pageId: string, last_edited_time: string) {
 
     if (!useCache) {
         const url = apiHost + `/blocks/${pageId}/children?page_size=1000`;
-        blocks = await fetch(url, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${notionToken}`,
-                'Content-Type': 'application/json',
-                'Notion-Version': '2022-06-28'
-            }
-        }).then(res => res.json()).then(data => {
-            console.log('get blocks success for pageid', pageId)
-            return data.results || []
-        }).catch(error => {
-            console.log('apierror')
-            console.error(error)
-            return []
-        });
 
-        await fs.mkdir(path.dirname(cacheFilePath), { recursive: true });
-        await fs.writeFile(cacheFilePath, stringify(blocks));
+        try {
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${notionToken}`,
+                    'Content-Type': 'application/json',
+                    'Notion-Version': '2022-06-28'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            blocks = data.results || [];
+
+            // 只有在获取到有效数据时才写入缓存
+            if (blocks.length > 0) {
+                await fs.mkdir(path.dirname(cacheFilePath), { recursive: true });
+                await fs.writeFile(cacheFilePath, stringify(blocks));
+                console.log('get blocks success for pageid', pageId, `cached ${blocks.length} blocks`);
+            } else {
+                console.warn('No blocks found for page:', pageId);
+            }
+        } catch (error: any) {
+            console.error('API request failed for page:', pageId);
+            console.error('Error:', error.message);
+
+            // 如果有旧缓存，尝试使用旧缓存
+            try {
+                const cachedData = await fs.readFile(cacheFilePath, 'utf-8');
+                const json = parse(cachedData);
+                if (Array.isArray(json) && json.length > 0) {
+                    console.log('Using stale cache for page:', pageId);
+                    blocks = json;
+                }
+            } catch (cacheError) {
+                console.error('No cache available and API request failed');
+                // 返回空数组而不是抛出错误，让构建继续
+                blocks = [];
+            }
+        }
     }
+
     const outputDir = 'public/assets/images'
     blocks.forEach(async (block: any) => {
         if (block.type == 'image') {
