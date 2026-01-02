@@ -14,24 +14,19 @@ const props = defineProps({
 
 <style scoped>
 .bullet-item {
-   position: relative;
-   padding-left: 24px;
-    &::before {
-      content: '';
-      /* 伪元素内容为空 */
-      position: absolute;
-      left: 0;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 8px;
-      /* 圆点直径 */
-      height: 8px;
-      /* 圆点直径 */
-      background-color: var(--vp-c-text-2);
-      /* 圆点颜色 */
-      border-radius: 50%;
-      /* 圆形 */
+  position: relative;
+  padding-left: 24px;
+  margin: 4px 0;
+}
 
-   } 
+.bullet-item::before {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 14px;
+  width: 6px;
+  height: 6px;
+  background-color: var(--vp-c-text-2);
+  border-radius: 50%;
 }
 </style>

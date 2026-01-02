@@ -84,6 +84,49 @@ h2 {
     max-width: 60rem !important;
 }
 
+/* 移除 VitePress 标题的默认分割线 */
+.vp-doc h1,
+.vp-doc h2,
+.vp-doc h3 {
+    border-top: none !important;
+    border-bottom: none !important;
+    margin-top: 0 !important;
+}
+
+/* 标题样式设计 */
+.vp-doc h1 {
+    /* 一级标题：文章标题 */
+    font-size: 2em;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-top: 0 !important;
+    margin-bottom: 24px;
+    padding-top: 8px;
+    color: var(--vp-c-text-1);
+}
+
+.vp-doc h2 {
+    /* 二级标题：主要章节 */
+    font-size: 1.5em;
+    font-weight: 600;
+    line-height: 1.4;
+    margin-top: 48px;
+    margin-bottom: 16px;
+    padding-top: 8px;
+    color: var(--vp-c-text-1);
+}
+
+.vp-doc h3 {
+    /* 三级标题：次要章节 */
+    font-size: 1.25em;
+    font-weight: 600;
+    line-height: 1.5;
+    margin-top: 32px;
+    margin-bottom: 12px;
+    padding-top: 4px;
+    color: var(--vp-c-text-1);
+}
+
 .page {
     background-color: var(--vp-c-bg-soft);
 }
@@ -136,6 +179,13 @@ h2 {
 
     .vp-doc h1 {
         font-size: 1.25rem !important;
+        border-bottom: none !important;
+    }
+
+    /* 移除所有标题的默认分割线 */
+    .vp-doc h2 {
+        border-top: none !important;
+        border-bottom: none !important;
     }
 
     .posts {
@@ -208,16 +258,20 @@ h2 {
 .page {
     line-height: 1.8;
     font-size: 18px;
-    padding: 2% 8% 4% 8%;
+    padding: 6% 8% 4% 8%;
     border: 1px solid var(--vp-c-divider-light);
     background-color: var(--vp-c-bg-soft);
     color: var(--vp-c-text-1);
 
     .title {
-        margin-bottom: 40px;
+        /* 文章标题样式 */
+        font-size: 2.2em;
+        font-weight: 700;
+        line-height: 1.3;
+        margin-top: 40px;
+        margin-bottom: 32px;
+        padding-bottom: 16px;
         border-bottom: 2px solid var(--vp-c-divider-light);
-        width: 98%;
-        line-height: 150%;
         color: var(--vp-c-text-1);
     }
 }

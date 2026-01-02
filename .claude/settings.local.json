@@ -5,7 +5,8 @@
       "Bash(cat:*)",
       "Bash(ls:*)",
       "Bash(pnpm add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(curl:*)"
     ]
   }
 }
