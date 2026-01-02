@@ -103,17 +103,24 @@ export async function getPageBlocks(pageId: string, last_edited_time: string) {
                 if (Array.isArray(json) && json.length > 0) {
                     console.log('Using stale cache for page:', pageId);
                     blocks = json;
+                } else {
+                    console.error('Stale cache is empty or invalid');
+                    blocks = [];
                 }
             } catch (cacheError) {
                 console.error('No cache available and API request failed');
                 // 返回空数组而不是抛出错误，让构建继续
                 blocks = [];
             }
+
+            // 无论是使用旧缓存还是返回空数组，都直接返回，跳过图片下载
+            return blocks;
         }
     }
 
+    // 处理图片下载（使用 Promise.all 等待所有异步操作完成）
     const outputDir = 'public/assets/images'
-    blocks.forEach(async (block: any) => {
+    const imagePromises = blocks.map(async (block: any) => {
         if (block.type == 'image') {
             let originUrl = block?.image?.file?.url
             if (!originUrl) {
@@ -134,13 +141,15 @@ export async function getPageBlocks(pageId: string, last_edited_time: string) {
 
                 console.log(`Downloaded image from ${block.id}: ${originUrl}`);
 
-                block.image.file.url = `/assets/images/${block.id}${filename}`
+                block.image.file.url = `/assets/images/${cachedFileName}`
             } catch (error) {
                 console.error(`Failed to cache image: ${originUrl}`, error);
             }
-
         }
     });
+
+    // 等待所有图片下载完成
+    await Promise.all(imagePromises);
 
     return blocks;
 }
