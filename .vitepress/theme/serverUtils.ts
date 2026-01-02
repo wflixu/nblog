@@ -159,34 +159,43 @@ export async function getPageBlocks(pageId: string, last_edited_time: string) {
 async function getPosts(pageSize: number) {
     const url = `${apiHost}/databases/${databaseId}/query`;
 
-    const results = await fetch(url, {
-        method: 'POST',
-        headers: {
-            'Authorization': `Bearer ${notionToken}`,
-            'Content-Type': 'application/json',
-            'Notion-Version': '2022-06-28'
-        },
-        body: JSON.stringify({
-            "filter": {
-                "property": "状态",
-                "select": {
-                    "equals": "发布"
-                }
+    let results = [];
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${notionToken}`,
+                'Content-Type': 'application/json',
+                'Notion-Version': '2022-06-28'
             },
-            "sorts": [
-                {
-                    "property": "Last edited time",
-                    "direction": "descending"
-                }
-            ]
-        })
-    }).then(res => res.json()).then(data => {
-        return data?.results ?? []
-    }).catch(error => {
-        console.log('apierror')
-        console.error(error)
-        return error
-    })
+            body: JSON.stringify({
+                "filter": {
+                    "property": "状态",
+                    "select": {
+                        "equals": "发布"
+                    }
+                },
+                "sorts": [
+                    {
+                        "property": "Last edited time",
+                        "direction": "descending"
+                    }
+                ]
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        results = data?.results ?? [];
+    } catch (error: any) {
+        console.error('API request failed for getPosts');
+        console.error('Error:', error.message);
+        // 返回空数组而不是错误对象，让构建继续
+        results = [];
+    }
 
 
     // 不再生成静态分页文件，改用客户端无限滚动
