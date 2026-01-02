@@ -37,9 +37,9 @@ codeToHtml(code, {
 .code {
    font-size: 16px;
    line-height: 1.5;
-   border: 1px solid lightgrey;
+   border: 1px solid var(--vp-c-divider-light);
    padding: 0 16px;
-   background-color: #ffffff;
+   background-color: var(--vp-c-bg-soft);
    overflow-x: auto;
 
    pre {

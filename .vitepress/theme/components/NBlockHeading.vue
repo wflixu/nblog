@@ -22,15 +22,15 @@ const props = defineProps({
 
 <style scoped>
 h1 {
-    color: #444;
+    color: var(--vp-c-text-1);
     font-size: 1.7em;
 }
 h2 {
-    color: #555;
+    color: var(--vp-c-text-1);
     font-size: 1.4em;
 }
 h3 {
-    color: #666;
+    color: var(--vp-c-text-2);
     font-size: 1.2em;
 }
 </style>

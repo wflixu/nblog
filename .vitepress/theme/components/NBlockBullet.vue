@@ -27,7 +27,7 @@ const props = defineProps({
       /* 圆点直径 */
       height: 8px;
       /* 圆点直径 */
-      background-color: #666;
+      background-color: var(--vp-c-text-2);
       /* 圆点颜色 */
       border-radius: 50%;
       /* 圆形 */

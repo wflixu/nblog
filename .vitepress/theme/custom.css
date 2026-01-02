@@ -85,7 +85,7 @@ h2 {
 }
 
 .page {
-    background-color: #CCE8CF;
+    background-color: var(--vp-c-bg-soft);
 }
 
 
@@ -209,13 +209,15 @@ h2 {
     line-height: 1.8;
     font-size: 18px;
     padding: 2% 8% 4% 8%;
-    border: 1px solid LightGrey;
+    border: 1px solid var(--vp-c-divider-light);
+    background-color: var(--vp-c-bg-soft);
+    color: var(--vp-c-text-1);
 
     .title {
         margin-bottom: 40px;
-        border-bottom: 2px LightGrey solid;
+        border-bottom: 2px solid var(--vp-c-divider-light);
         width: 98%;
         line-height: 150%;
-        color: #333;
+        color: var(--vp-c-text-1);
     }
 }
