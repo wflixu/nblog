@@ -14,6 +14,14 @@ import NBlockImage from './components/NBlockImage.vue'
 import NBlockParagraph from './components/NBlockParagraph.vue'
 import NRichText from './components/NRichText.vue'
 import NBlockBullet from './components/NBlockBullet.vue'
+import NBlockNumbered from './components/NBlockNumbered.vue'
+import NBlockToggle from './components/NBlockToggle.vue'
+import NBlockTodo from './components/NBlockTodo.vue'
+import NBlockQuote from './components/NBlockQuote.vue'
+import NBlockCallout from './components/NBlockCallout.vue'
+import NBlockBookmark from './components/NBlockBookmark.vue'
+import NBlockDivider from './components/NBlockDivider.vue'
+import HomePage from './components/HomePage.vue'
 
 const components = {
     NContent,
@@ -23,7 +31,14 @@ const components = {
     NBlockImage,
     NBlockBullet,
     NBlockParagraph,
-    NRichText
+    NRichText,
+    NBlockNumbered,
+    NBlockToggle,
+    NBlockTodo,
+    NBlockQuote,
+    NBlockCallout,
+    NBlockBookmark,
+    NBlockDivider
 }
 
 import './custom.css'
@@ -38,6 +53,7 @@ export default {
         app.component('Archives', Archives)
         app.component('Page', Page)
         app.component('Comment', Comment)
+        app.component('HomePage', HomePage)
 
         Object.entries(components).forEach(([name, comp]) => {
             app.component(name, comp)

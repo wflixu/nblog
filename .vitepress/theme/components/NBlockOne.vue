@@ -14,6 +14,27 @@
     <template v-else-if="props.bulleted_list_item">
         <NBlockBullet v-bind="props.bulleted_list_item" :key="props.id"></NBlockBullet>
     </template>
+    <template v-else-if="props.numbered_list_item">
+        <NBlockNumbered v-bind="props.numbered_list_item" :key="props.id"></NBlockNumbered>
+    </template>
+    <template v-else-if="props.toggle">
+        <NBlockToggle v-bind="props.toggle" :key="props.id"></NBlockToggle>
+    </template>
+    <template v-else-if="props.to_do">
+        <NBlockTodo v-bind="props.to_do" :key="props.id"></NBlockTodo>
+    </template>
+    <template v-else-if="props.quote">
+        <NBlockQuote v-bind="props.quote" :key="props.id"></NBlockQuote>
+    </template>
+    <template v-else-if="props.callout">
+        <NBlockCallout v-bind="props.callout" :key="props.id"></NBlockCallout>
+    </template>
+    <template v-else-if="props.bookmark">
+        <NBlockBookmark v-bind="props.bookmark" :key="props.id"></NBlockBookmark>
+    </template>
+    <template v-else-if="props.divider">
+        <NBlockDivider :key="props.id"></NBlockDivider>
+    </template>
 </template>
 
 <script setup > 
@@ -33,6 +54,13 @@ const props = defineProps({
     heading_2: Object,
     heading_3: Object,
     image: Object,
+    numbered_list_item: Object,
+    toggle: Object,
+    to_do: Object,
+    quote: Object,
+    callout: Object,
+    bookmark: Object,
+    divider: Object,
 });
 
 const isHeading = computed(() => {

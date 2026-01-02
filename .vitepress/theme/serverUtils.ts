@@ -3,6 +3,7 @@ import fs from 'fs-extra'
 import path, { resolve } from 'path'
 import axios from 'axios';
 import dotenv from 'dotenv';
+import { parse, stringify } from 'flatted';
 
 dotenv.config();
 
@@ -30,12 +31,18 @@ export async function getPageBlocks(pageId: string, last_edited_time: string) {
     let blocks = [];
     if (useCache) {
         try {
-            let json = JSON.parse(await fs.readFile(cacheFilePath, 'utf-8'));
-            blocks = json ?? [];
+            let json = parse(await fs.readFile(cacheFilePath, 'utf-8'));
+            // 确保 flatted 解析的结果是数组
+            blocks = Array.isArray(json) ? json : [];
         } catch (error) {
-            console.error('error:', error)
+            console.error('Cache parse error:', error);
+            // 删除损坏的缓存
+            await fs.remove(cacheFilePath).catch(() => {});
+            useCache = false;
         }
-    } else {
+    }
+
+    if (!useCache) {
         const url = apiHost + `/blocks/${pageId}/children?page_size=1000`;
         blocks = await fetch(url, {
             method: 'GET',
@@ -46,7 +53,7 @@ export async function getPageBlocks(pageId: string, last_edited_time: string) {
             }
         }).then(res => res.json()).then(data => {
             console.log('get blocks success for pageid', pageId)
-            return data.results
+            return data.results || []
         }).catch(error => {
             console.log('apierror')
             console.error(error)
@@ -54,10 +61,10 @@ export async function getPageBlocks(pageId: string, last_edited_time: string) {
         });
 
         await fs.mkdir(path.dirname(cacheFilePath), { recursive: true });
-        await fs.writeFile(cacheFilePath, JSON.stringify(blocks));
+        await fs.writeFile(cacheFilePath, stringify(blocks));
     }
     const outputDir = 'public/assets/images'
-    blocks.forEach(async (block) => {
+    blocks.forEach(async (block: any) => {
         if (block.type == 'image') {
             let originUrl = block?.image?.file?.url
             if (!originUrl) {
@@ -124,7 +131,7 @@ async function getPosts(pageSize: number) {
     })
 
 
-    await generatePaginationPages(results.length, pageSize)
+    // 不再生成静态分页文件，改用客户端无限滚动
 
     let posts = results.map((item: any) => {
         const title = item.properties.Title.title[0].plain_text;
@@ -144,38 +151,6 @@ async function getPosts(pageSize: number) {
 
     posts.sort(_compareDate as any)
     return posts
-}
-
-async function generatePaginationPages(total: number, pageSize: number) {
-    //  pagesNum
-    let pagesNum = total % pageSize === 0 ? total / pageSize : Math.floor(total / pageSize) + 1
-    const paths = resolve('./')
-    if (total > 0) {
-        for (let i = 1; i < pagesNum + 1; i++) {
-            const page = `
----
-page: true
-title: ${i === 1 ? 'home' : 'page_' + i}
-aside: false
----
-<script setup>
-import Page from "./.vitepress/theme/components/Page.vue";
-import { useData } from "vitepress";
-const { theme } = useData();
-const posts = theme.value.posts.slice(${pageSize * (i - 1)},${pageSize * i})
-</script>
-<Page :posts="posts" :pageCurrent="${i}" :pagesNum="${pagesNum}" />
-`
-
-            if (i === 1) {
-                const file = paths + `/index.md`
-                await fs.writeFile(file, page.trim())
-            } else {
-                const file = paths + `/page_${i}.md`
-                await fs.writeFile(file, page.trim())
-            }
-        }
-    }
 }
 
 function _convertDate(date = new Date().toString()) {
