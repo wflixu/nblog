@@ -13,3 +13,5 @@ zsh_history.md
 origin_theme.css
 .vitepress/cache
 public/assets/images/*
+justfile
+.env
