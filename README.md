@@ -76,5 +76,7 @@ npm run build
 
 这个仓库是 根据 [airene vitepress-blog-pure](https://github.com/airene/vitepress-blog-pure) 改造的，原来是用本地md 文档管理博客，因为 vitpress 有SSG 的功能，改造成用Notion作为编辑端和管理端，vitepress 作为博客的渲染器，这样可以更好的管理博客文章，写博文是编辑体验更好。
 
+## 开源协议
 
+本项目采用 [MIT License](LICENSE) 开源协议。
 
