@@ -7,7 +7,6 @@ dist-ssr
 pnpm-lock.yaml
 smartmontools.md
 zsh_history.md
-CLAUDE.md
 /package-lock.json
 origin_theme.css
 .vitepress/cache
