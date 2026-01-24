@@ -90,40 +90,38 @@ h2 {
 .vp-doc h3 {
     border-top: none !important;
     border-bottom: none !important;
-    margin-top: 0 !important;
 }
 
-/* 标题样式设计 */
+/* 标题样式设计 - 参考 Notion 官方样式 */
 .vp-doc h1 {
-    /* 一级标题：文章标题 */
-    font-size: 2em;
-    font-weight: 700;
-    line-height: 1.3;
-    margin-top: 0 !important;
-    margin-bottom: 24px;
-    padding-top: 8px;
+    /* 一级标题：30px，最粗 */
+    font-size: 30px;
+    font-weight: 600;
+    line-height: 1.5;
+    margin-top: 2em;
+    margin-bottom: 4px;
+    padding-top: 4px;
     color: var(--vp-c-text-1);
 }
 
 .vp-doc h2 {
-    /* 二级标题：主要章节 */
-    font-size: 1.5em;
+    /* 二级标题：24px，较粗 */
+    font-size: 24px;
     font-weight: 600;
     line-height: 1.4;
-    margin-top: 48px;
-    margin-bottom: 16px;
-    padding-top: 8px;
+    margin-top: 1.4em;
+    margin-bottom: 1px;
+    padding-top: 4px;
     color: var(--vp-c-text-1);
 }
 
 .vp-doc h3 {
-    /* 三级标题：次要章节 */
-    font-size: 1.25em;
+    /* 三级标题：20px，中等 */
+    font-size: 20px;
     font-weight: 600;
     line-height: 1.5;
-    margin-top: 32px;
-    margin-bottom: 12px;
-    padding-top: 4px;
+    margin-top: 16px;
+    padding-top: 2px;
     color: var(--vp-c-text-1);
 }
 
