@@ -1,9 +1,10 @@
 
 import fs from 'fs-extra'
-import path, { resolve } from 'path'
+import path from 'path'
 import axios from 'axios';
 import dotenv from 'dotenv';
 import { parse, stringify } from 'flatted';
+import { getDataSourceId, queryNotionDatabase } from './notionApi.js';
 
 // 加载环境变量，明确指定 .env 文件路径
 const envPath = path.resolve(process.cwd(), '.env');
@@ -14,17 +15,16 @@ if (result.error) {
 }
 
 const apiHost = process.env.API_HOST || 'https://api.notion.com/v1'
-const databaseId = process.env.DATABASE_ID;
 const notionToken = process.env.NOTION_TOKEN;
 
 // 验证必需的环境变量
-if (!notionToken || !databaseId) {
+if (!notionToken) {
     console.error('\n❌ Error: Missing required environment variables!');
     console.error('Please create a .env file in the project root with the following content:');
     console.error('  NOTION_TOKEN=your_notion_token');
     console.error('  DATABASE_ID=your_database_id');
-    console.error('  API_HOST=https://api.notion.com/v1\n');
-    throw new Error('Missing NOTION_TOKEN or DATABASE_ID in environment variables');
+    console.error('  API_HOST=https://api.notion.com/v1');
+    throw new Error('Missing NOTION_TOKEN in environment variables');
 }
 
 export async function getPageBlocks(pageId: string, last_edited_time: string) {
@@ -59,7 +59,7 @@ export async function getPageBlocks(pageId: string, last_edited_time: string) {
         } catch (error) {
             console.error('Cache parse error:', error);
             // 删除损坏的缓存
-            await fs.remove(cacheFilePath).catch(() => {});
+            await fs.remove(cacheFilePath).catch(() => { });
             useCache = false;
         }
     }
@@ -73,7 +73,7 @@ export async function getPageBlocks(pageId: string, last_edited_time: string) {
                 headers: {
                     'Authorization': `Bearer ${notionToken}`,
                     'Content-Type': 'application/json',
-                    'Notion-Version': '2022-06-28'
+                    'Notion-Version': '2025-09-03'
                 }
             });
 
@@ -157,45 +157,11 @@ export async function getPageBlocks(pageId: string, last_edited_time: string) {
 
 
 async function getPosts(pageSize: number) {
-    const url = `${apiHost}/databases/${databaseId}/query`;
+    // 使用公共方法获取 data_source_id 和查询数据
+    const dataSourceId = await getDataSourceId();
+    const results = await queryNotionDatabase(dataSourceId);
 
-    let results = [];
-    try {
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${notionToken}`,
-                'Content-Type': 'application/json',
-                'Notion-Version': '2022-06-28'
-            },
-            body: JSON.stringify({
-                "filter": {
-                    "property": "状态",
-                    "select": {
-                        "equals": "发布"
-                    }
-                },
-                "sorts": [
-                    {
-                        "property": "Last edited time",
-                        "direction": "descending"
-                    }
-                ]
-            })
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        results = data?.results ?? [];
-    } catch (error: any) {
-        console.error('API request failed for getPosts');
-        console.error('Error:', error.message);
-        // 返回空数组而不是错误对象，让构建继续
-        results = [];
-    }
+    console.log('getPosts: Query returned', results.length, 'results');
 
 
     // 不再生成静态分页文件，改用客户端无限滚动

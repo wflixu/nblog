@@ -24,7 +24,9 @@
       "Bash(pnpm build:*)",
       "Bash(timeout:*)",
       "Bash(find:*)",
-      "Bash(git rm:*)"
+      "Bash(git rm:*)",
+      "Bash(pnpm dev:*)",
+      "Bash(grep:*)"
     ]
   }
 }
