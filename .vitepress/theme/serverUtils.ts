@@ -1,5 +1,5 @@
 
-import fs from 'fs-extra'
+import fs from 'node:fs/promises'
 import path from 'path'
 import axios from 'axios';
 import { parse, stringify } from 'flatted';
@@ -37,7 +37,7 @@ export async function getPageBlocks(pageId: string, last_edited_time: string) {
         } catch (error) {
             console.error('Cache parse error:', error);
             // 删除损坏的缓存
-            await fs.remove(cacheFilePath).catch(() => { });
+            await fs.rm(cacheFilePath, { force: true }).catch(() => { });
             useCache = false;
         }
     }

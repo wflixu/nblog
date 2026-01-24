@@ -13,7 +13,6 @@
   "license": "ISC",
   "type": "module",
   "devDependencies": {
-    "@types/fs-extra": "^11.0.4",
     "@types/node": "^24.10.4",
     "@typescript-eslint/eslint-plugin": "^8.51.0",
     "@typescript-eslint/parser": "^8.51.0",
@@ -26,7 +25,6 @@
     "eslint-plugin-prettier": "^5.5.4",
     "eslint-plugin-vue": "^10.6.2",
     "flatted": "^3.3.3",
-    "fs-extra": "^11.3.3",
     "globby": "^16.1.0",
     "gray-matter": "^4.0.3",
     "prettier": "^3.7.4",
