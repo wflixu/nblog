@@ -2,30 +2,8 @@
 import fs from 'fs-extra'
 import path from 'path'
 import axios from 'axios';
-import dotenv from 'dotenv';
 import { parse, stringify } from 'flatted';
-import { getDataSourceId, queryNotionDatabase } from './notionApi.js';
-
-// 加载环境变量，明确指定 .env 文件路径
-const envPath = path.resolve(process.cwd(), '.env');
-const result = dotenv.config({ path: envPath });
-
-if (result.error) {
-    console.warn('Warning: .env file not found or cannot be read. Please create .env file with NOTION_TOKEN, DATABASE_ID, and API_HOST.');
-}
-
-const apiHost = process.env.API_HOST || 'https://api.notion.com/v1'
-const notionToken = process.env.NOTION_TOKEN;
-
-// 验证必需的环境变量
-if (!notionToken) {
-    console.error('\n❌ Error: Missing required environment variables!');
-    console.error('Please create a .env file in the project root with the following content:');
-    console.error('  NOTION_TOKEN=your_notion_token');
-    console.error('  DATABASE_ID=your_database_id');
-    console.error('  API_HOST=https://api.notion.com/v1');
-    throw new Error('Missing NOTION_TOKEN in environment variables');
-}
+import { getPageBlocks as fetchNotionPageBlocks, getDataSourceId, queryNotionDatabase } from './notionApi.js';
 
 export async function getPageBlocks(pageId: string, last_edited_time: string) {
     console.log('getPageBlocks:', pageId)
@@ -65,24 +43,9 @@ export async function getPageBlocks(pageId: string, last_edited_time: string) {
     }
 
     if (!useCache) {
-        const url = apiHost + `/blocks/${pageId}/children?page_size=1000`;
-
         try {
-            const response = await fetch(url, {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${notionToken}`,
-                    'Content-Type': 'application/json',
-                    'Notion-Version': '2025-09-03'
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const data = await response.json();
-            blocks = data.results || [];
+            // 使用公共方法从 Notion API 获取所有 blocks（支持分页）
+            blocks = await fetchNotionPageBlocks(pageId);
 
             // 只有在获取到有效数据时才写入缓存
             if (blocks.length > 0) {

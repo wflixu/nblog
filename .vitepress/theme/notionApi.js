@@ -108,3 +108,64 @@ export async function queryNotionDatabase(dataSourceId) {
         return [];
     }
 }
+
+/**
+ * 获取页面的所有 blocks（支持分页）
+ * @param {string} pageId Notion 页面 ID
+ * @returns {Promise<any[]>} 所有 blocks 数组
+ */
+export async function getPageBlocks(pageId) {
+    if (!notionToken || !pageId) {
+        console.error('Missing NOTION_TOKEN or pageId');
+        return [];
+    }
+
+    let allBlocks = [];
+    let nextCursor = null;
+    let hasMore = true;
+
+    try {
+        // 分页获取所有 blocks
+        while (hasMore) {
+            let url;
+            if (nextCursor) {
+                url = `${apiHost}/blocks/${pageId}/children?page_size=1000&start_cursor=${encodeURIComponent(nextCursor)}`;
+            } else {
+                url = `${apiHost}/blocks/${pageId}/children?page_size=1000`;
+            }
+
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${notionToken}`,
+                    'Content-Type': 'application/json',
+                    'Notion-Version': '2025-09-03'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            const results = data.results || [];
+
+            allBlocks.push(...results);
+
+            // 检查是否还有更多数据
+            hasMore = data.has_more || false;
+            nextCursor = data.next_cursor || null;
+
+            if (hasMore) {
+                console.log(`Fetched ${results.length} blocks, fetching more... (total so far: ${allBlocks.length})`);
+            }
+        }
+
+        return allBlocks;
+    } catch (error) {
+        console.error('Failed to fetch blocks for page:', pageId);
+        console.error('Error:', error.message);
+        return [];
+    }
+}
+
