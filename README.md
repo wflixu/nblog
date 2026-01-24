@@ -55,9 +55,72 @@ API_HOST=https://api.notion.com/v1
 - `.env` 文件已经在 `.gitignore` 中，不会被提交
 - 只提交 `.env.example` 作为模板
 
+## Notion API 集成
+
+本项目使用 **Notion API 2025-09-03** 版本，提供三个公共方法用于与 Notion 交互：
+
+### 公共 API 方法
+
+所有 API 方法位于 `.vitepress/theme/notionApi.js`：
+
+#### 1. `getDataSourceId()` - 获取 Data Source ID
+
+根据 Notion API 2025-09-03 升级，需要先获取 data_source_id：
+
+```javascript
+import { getDataSourceId } from './.vitepress/theme/notionApi.js'
+
+const dataSourceId = await getDataSourceId()
+// 返回: data_source_id (如果获取失败则返回 databaseId)
+```
+
+#### 2. `queryNotionDatabase(dataSourceId)` - 查询数据库文章
+
+使用 data_source_id 查询已发布的文章：
+
+```javascript
+import { queryNotionDatabase } from './.vitepress/theme/notionApi.js'
+
+const results = await queryNotionDatabase(dataSourceId)
+// 返回: 文章数组（已过滤"状态=发布"的记录）
+```
+
+**查询条件：**
+- `filter`: 状态 = "发布"
+- `sorts`: Last edited time 降序
+
+#### 3. `getPageBlocks(pageId)` - 获取页面 Blocks（支持分页）
+
+自动分页获取页面的所有 blocks：
+
+```javascript
+import { getPageBlocks } from './.vitepress/theme/notionApi.js'
+
+const blocks = await getPageBlocks(pageId)
+// 返回: 所有 blocks 数组（自动处理分页）
+```
+
+**特性：**
+- ✅ 自动分页：当 blocks 超过 1000 时自动请求下一页
+- ✅ 使用 `next_cursor` 实现分页
+- ✅ 直到 `has_more: false` 才停止
+
+**分页示例：**
+```
+Fetched 100 blocks, fetching more... (total so far: 100)
+Fetched 100 blocks, fetching more... (total so far: 200)
+get blocks success for pageid xxx cached 154 blocks
+```
+
+### API 版本说明
+
+- **API 版本**: `2025-09-03`
+- **变更**: 使用 data sources 架构替代原有的 database 查询
+- **兼容性**: 向后兼容，自动降级到 databaseId
+
 ## 接口
 
-### 
+###
 
 ### 3. 启动开发服务器
 
