@@ -2,7 +2,7 @@
     "compilerOptions": {
         "target": "esnext",
         "module": "esnext",
-        "moduleResolution": "node",
+        "moduleResolution": "bundler",
         "strict": true,
         "jsx": "preserve",
         "sourceMap": true,
@@ -20,7 +20,8 @@
             "@/*": [
                 "src/*"
             ]
-        }
+        },
+        "ignoreDeprecations": "5.0"
     },
     "include": [
         ".vitepress/**/*.ts",
