@@ -10,7 +10,12 @@
       <p class="describe" v-html="article.frontMatter.description"></p>
       <div class='post-info'>
         {{ article.frontMatter.date }}
-        <span v-for="item in article.frontMatter.tags" :key="item">
+        <span v-if="article.frontMatter.category" class="category">
+          <a :href="withBase(`/pages/category.html?category=${article.frontMatter.category}`)">
+            {{ article.frontMatter.category }}
+          </a>
+        </span>
+        <span v-for="item in article.frontMatter.tags" :key="item" class="tag">
           <a :href="withBase(`/pages/tags.html?tag=${item}`)"> {{ item }}</a>
         </span>
       </div>
@@ -45,6 +50,7 @@ interface Article {
     description: string
     date: string
     tags: string[]
+    category?: string
   }
 }
 
@@ -159,6 +165,7 @@ onUnmounted(() => {
   display: flex;
   gap: 8px;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .post-info a {
@@ -168,6 +175,28 @@ onUnmounted(() => {
 
 .post-info a:hover {
   text-decoration: underline;
+}
+
+.post-info .category a {
+  color: var(--vp-c-text-2);
+  font-size: 0.85rem;
+}
+
+.post-info .category a:hover {
+  color: var(--vp-c-brand);
+}
+
+.post-info .tag a {
+  color: var(--vp-c-brand);
+  font-size: 0.85rem;
+  padding: 2px 6px;
+  background-color: var(--vp-c-bg-soft);
+  border-radius: 4px;
+}
+
+.post-info .tag a:hover {
+  background-color: var(--vp-c-brand);
+  color: white;
 }
 
 /* 状态样式 */
