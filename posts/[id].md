@@ -7,22 +7,14 @@ const blocks = ref([])
 const loading = ref(true)
 
 onMounted(async () => {
-    // 从 page.params 获取参数
     const pageId = page.value.params.id
     const blocksPath = `/blocks-data/${pageId}.json`
 
-    console.log('Loading blocks for:', pageId, 'from:', blocksPath)
-
     try {
         const response = await fetch(blocksPath)
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`)
-        }
-
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
         const jsonText = await response.text()
         blocks.value = JSON.parse(jsonText)
-        console.log('Loaded blocks:', blocks.value.length)
     } catch (error) {
         console.error('Failed to load blocks for', pageId, ':', error)
     } finally {
