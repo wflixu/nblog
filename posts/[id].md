@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useData } from 'vitepress'
+import PostMeta from '../.vitepress/theme/components/PostMeta.vue'
 
 const { page } = useData()
 const blocks = ref([])
@@ -25,6 +26,7 @@ onMounted(async () => {
 
 <div class="page">
     <h1 class="title">{{ page.params.title }}</h1>
+    <PostMeta />
     <div v-if="loading" class="loading">加载中...</div>
     <NContent v-else-if="blocks.length > 0" :results="blocks"></NContent>
     <div v-else class="error">无法加载文章内容</div>
