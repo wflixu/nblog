@@ -163,40 +163,48 @@ onUnmounted(() => {
 
 .post-info {
   display: flex;
-  gap: 8px;
+  gap: 10px;
   align-items: center;
   flex-wrap: wrap;
 }
 
-.post-info a {
-  color: var(--vp-c-brand);
-  text-decoration: none;
-}
-
-.post-info a:hover {
-  text-decoration: underline;
+.post-info .category {
+  display: inline-flex;
+  align-items: center;
 }
 
 .post-info .category a {
   color: var(--vp-c-text-2);
   font-size: 0.85rem;
+  text-decoration: none;
+  transition: color 0.2s ease;
 }
 
 .post-info .category a:hover {
   color: var(--vp-c-brand);
 }
 
+.post-info .tag {
+  display: inline-flex;
+  background-color: transparent;
+}
+
 .post-info .tag a {
   color: var(--vp-c-brand);
-  font-size: 0.85rem;
-  padding: 2px 6px;
+  font-size: 0.8rem;
+  padding: 2px 8px;
   background-color: var(--vp-c-bg-soft);
-  border-radius: 4px;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  border: 1px solid var(--vp-c-divider-light);
 }
 
 .post-info .tag a:hover {
   background-color: var(--vp-c-brand);
   color: white;
+  border-color: var(--vp-c-brand);
+  text-decoration: none;
 }
 
 /* 状态样式 */

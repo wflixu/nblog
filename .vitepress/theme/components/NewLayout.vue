@@ -35,7 +35,7 @@
 import DefaultTheme from 'vitepress/theme'
 import Copyright from './Copyright.vue'
 import { useData } from 'vitepress'
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, watch } from 'vue'
 import { withBase } from 'vitepress'
 
 const { page } = useData()
@@ -52,15 +52,30 @@ const showEditedTime = computed(() => {
 const { Layout } = DefaultTheme
 
 // 在页面加载后将 meta 信息移动到标题下方
+function moveMetaInfo() {
+    // 使用 requestAnimationFrame 确保 DOM 已经渲染
+    requestAnimationFrame(() => {
+        setTimeout(() => {
+            const metaInfo = document.querySelector('.post-info-wrapper')
+            const title = document.querySelector('.vp-doc h1')
+            if (metaInfo && title) {
+                // 检查是否已经移动过，避免重复移动
+                if (!title.nextElementSibling?.classList?.contains('post-info-wrapper')) {
+                    title.after(metaInfo)
+                }
+            }
+        }, 100)
+    })
+}
+
 onMounted(() => {
-    setTimeout(() => {
-        const metaInfo = document.querySelector('.post-info-wrapper')
-        const title = document.querySelector('.vp-doc h1')
-        if (metaInfo && title) {
-            title.after(metaInfo)
-        }
-    }, 0)
+    moveMetaInfo()
 })
+
+// 监听页面变化，在 SPA 导航时重新移动 meta 信息
+watch(() => page.value.path, () => {
+    moveMetaInfo()
+}, { flush: 'post' })
 </script>
 
 <style>
