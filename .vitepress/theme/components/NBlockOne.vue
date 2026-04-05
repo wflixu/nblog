@@ -35,9 +35,15 @@
     <template v-else-if="props.divider">
         <NBlockDivider :key="props.id"></NBlockDivider>
     </template>
+    <template v-else-if="props.table">
+        <NBlockTable v-bind="props.table" :key="props.id"></NBlockTable>
+    </template>
+    <template v-else-if="props.equation">
+        <NBlockEquation v-bind="props.equation" :key="props.id"></NBlockEquation>
+    </template>
 </template>
 
-<script setup > 
+<script setup >
 import {computed} from 'vue'
 
 
@@ -61,13 +67,15 @@ const props = defineProps({
     callout: Object,
     bookmark: Object,
     divider: Object,
+    table: Object,
+    equation: Object,
 });
 
 const isHeading = computed(() => {
     return props.type.startsWith("heading_")
 })
 const headingProps = computed(() => {
-    return props[props.type] 
+    return props[props.type]
 })
 
 </script>

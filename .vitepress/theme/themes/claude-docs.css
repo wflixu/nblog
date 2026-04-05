@@ -1,0 +1,296 @@
+/* Claude Code Docs 风格 - 技术精致主义 */
+
+/* 主题类名前缀 .theme-claude-docs - 使用 html 选择器提高优先级 */
+html.theme-claude-docs,
+.theme-claude-docs {
+  /* 背景色 - 冷色中性 */
+  --vp-c-bg: #ffffff;
+  --vp-c-bg-soft: #fafafa;
+  --vp-c-bg-alt: #f5f5f5;
+  --vp-c-bg-elv: #ffffff;
+
+  /* 文字色 - 高对比度 */
+  --vp-c-text-1: #1a1a1a;
+  --vp-c-text-2: #525252;
+  --vp-c-text-3: #737373;
+
+  /* 分割线和边框 */
+  --vp-c-divider: #e5e7eb;
+  --vp-c-divider-light: #f3f4f6;
+  --vp-c-border: #d1d5db;
+
+  /* 品牌色 - 锐利的蓝色 */
+  --vp-c-brand: #2563eb;
+  --vp-c-brand-light: #3b82f6;
+  --vp-c-brand-lighter: #60a5fa;
+  --vp-c-brand-dark: #1d4ed8;
+  --vp-c-brand-darker: #1e40af;
+
+  /* 代码块背景 */
+  --vp-code-block-bg: #f9fafb;
+  --vp-c-text-code: #1f2937;
+
+  /* 圆角 - 中等，精确 */
+  --vp-radius-small: 6px;
+  --vp-radius-medium: 8px;
+  --vp-radius-large: 12px;
+
+  /* 间距 - 紧凑，高效 */
+  --vp-line-height-base: 1.5;
+  --vp-line-height-loose: 1.7;
+  --vp-spacing-xs: 4px;
+  --vp-spacing-sm: 8px;
+  --vp-spacing-md: 12px;
+  --vp-spacing-lg: 20px;
+  --vp-spacing-xl: 28px;
+
+  /* 阴影 - 清晰，有层次 */
+  --vp-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --vp-shadow-2: 0 4px 6px rgba(0, 0, 0, 0.07);
+  --vp-shadow-3: 0 10px 15px rgba(0, 0, 0, 0.1);
+
+  /* Claude Docs 特有：技术感强调色 */
+  --claude-accent: #2563eb;
+  --claude-success: #059669;
+  --claude-warning: #d97706;
+  --claude-error: #dc2626;
+}
+
+/* Claude Code Docs 暗色模式 - 深色 IDE 风格 */
+html.theme-claude-docs.dark,
+.theme-claude-docs.dark,
+.dark {
+  --vp-c-bg: #0f0f0f;
+  --vp-c-bg-soft: #171717;
+  --vp-c-bg-alt: #1f1f1f;
+  --vp-c-bg-elv: #121212;
+
+  /* 高对比度文字 */
+  --vp-c-text-1: #f5f5f5;
+  --vp-c-text-2: #a3a3a3;
+  --vp-c-text-3: #737373;
+
+  --vp-c-divider: #262626;
+  --vp-c-divider-light: #1f1f1f;
+  --vp-c-border: #333333;
+
+  --vp-c-brand: #3b82f6;
+  --vp-c-brand-light: #60a5fa;
+  --vp-c-brand-lighter: #93c5fd;
+  --vp-c-brand-dark: #2563eb;
+  --vp-c-brand-darker: #1d4ed8;
+
+  --vp-code-block-bg: #1f1f1f;
+  --vp-c-text-code: #e5e5e5;
+
+  --vp-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --vp-shadow-2: 0 4px 6px rgba(0, 0, 0, 0.4);
+  --vp-shadow-3: 0 10px 15px rgba(0, 0, 0, 0.5);
+
+  --claude-accent: #3b82f6;
+  --claude-success: #10b981;
+  --claude-warning: #f59e0b;
+  --claude-error: #ef4444;
+}
+
+/* ========== Claude Docs 风格细节增强 ========== */
+
+/* 选中文本高亮 */
+.theme-claude-docs ::selection {
+  background-color: rgba(37, 99, 235, 0.2);
+}
+
+/* 平滑滚动 */
+.theme-claude-docs html {
+  scroll-behavior: smooth;
+}
+
+/* Claude Code Docs 风格的特定组件样式覆盖 */
+.theme-claude-docs .vp-doc p {
+  line-height: var(--vp-line-height-base);
+  margin-bottom: var(--vp-spacing-md);
+}
+
+/* Claude Code Docs 代码块 - 技术编辑器风格 */
+.theme-claude-docs .vp-doc pre {
+  border-radius: var(--vp-radius-medium);
+  background-color: var(--vp-code-block-bg);
+  padding: var(--vp-spacing-md);
+  border: 1px solid var(--vp-c-divider);
+  box-shadow: var(--vp-shadow-1);
+  overflow-x: auto;
+}
+
+.theme-claude-docs .vp-doc .vp-code {
+  margin: 0;
+  border-radius: var(--vp-radius-medium);
+}
+
+.theme-claude-docs .vp-doc code {
+  font-family: var(--vp-font-family-mono);
+  font-size: 0.85em;
+  background-color: var(--vp-code-block-bg);
+  padding: 2px 5px;
+  border-radius: var(--vp-radius-small);
+  border: 1px solid var(--vp-c-divider-light);
+  color: var(--vp-c-text-code);
+}
+
+/* 代码块中的行 */
+.theme-claude-docs .vp-doc pre code {
+  padding: 0;
+  border: none;
+  background: transparent;
+  line-height: 1.6;
+}
+
+/* 代码块语言标签 */
+.theme-claude-docs .vp-doc div[class*="language-"] .lang {
+  display: inline-block;
+  font-size: 0.7rem;
+  color: var(--vp-c-text-3);
+  font-family: var(--vp-font-family-mono);
+  margin-bottom: var(--vp-spacing-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* 代码块复制按钮样式 */
+.theme-claude-docs .vp-doc .copy-button {
+  background-color: var(--vp-c-bg-alt);
+  border: 1px solid var(--vp-c-divider);
+  border-radius: var(--vp-radius-small);
+  color: var(--vp-c-text-2);
+  transition: all 0.2s ease;
+}
+
+.theme-claude-docs .vp-doc .copy-button:hover {
+  background-color: var(--vp-c-brand);
+  border-color: var(--vp-c-brand);
+  color: white;
+}
+
+/* 行内代码 - 技术感 */
+.theme-claude-docs .vp-doc p code,
+.theme-claude-docs .vp-doc li code,
+.theme-claude-docs .vp-doc td code {
+  background-color: var(--vp-c-bg-alt);
+  padding: 2px 6px;
+  border-radius: var(--vp-radius-small);
+  font-size: 0.85em;
+  color: var(--vp-c-brand-dark);
+  border: 1px solid var(--vp-c-divider-light);
+  font-family: var(--vp-font-family-mono);
+}
+
+.dark .theme-claude-docs .vp-doc p code,
+.dark .theme-claude-docs .vp-doc li code,
+.dark .theme-claude-docs .vp-doc td code {
+  color: var(--vp-c-brand-light);
+}
+
+/* Claude Code Docs 风格的标题 */
+.theme-claude-docs .vp-doc h1 {
+  font-weight: 700;
+  font-size: 1.75rem;
+  letter-spacing: -0.025em;
+  margin-top: calc(var(--vp-spacing-xl) * 1.2);
+  margin-bottom: var(--vp-spacing-md);
+}
+
+.theme-claude-docs .vp-doc h2 {
+  font-weight: 600;
+  font-size: 1.375rem;
+  letter-spacing: -0.015em;
+  margin-top: calc(var(--vp-spacing-xl) * 1.2);
+  margin-bottom: var(--vp-spacing-sm);
+  padding-bottom: var(--vp-spacing-sm);
+  border-bottom: 1px solid var(--vp-c-divider);
+}
+
+.theme-claude-docs .vp-doc h3 {
+  font-weight: 600;
+  font-size: 1.125rem;
+  letter-spacing: -0.01em;
+  margin-top: var(--vp-spacing-lg);
+  margin-bottom: var(--vp-spacing-xs);
+}
+
+/* 自定义块样式 */
+.theme-claude-docs .vp-doc .custom-block {
+  border-radius: var(--vp-radius-small);
+  padding: var(--vp-spacing-md) var(--vp-spacing-lg);
+  margin: var(--vp-spacing-md) 0;
+  border-left: 4px solid var(--vp-c-brand);
+}
+
+/* 引用块样式 - 紧凑技术感 */
+.theme-claude-docs .vp-doc blockquote {
+  border-left: 4px solid var(--vp-c-brand);
+  padding-left: var(--vp-spacing-md);
+  margin-left: 0;
+  color: var(--vp-c-text-2);
+  background-color: var(--vp-c-bg-soft);
+  padding: var(--vp-spacing-sm) var(--vp-spacing-md);
+  border-radius: 0 var(--vp-radius-small) var(--vp-radius-small) 0;
+}
+
+/* 链接样式 */
+.theme-claude-docs .vp-doc a {
+  color: var(--vp-c-brand);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.theme-claude-docs .vp-doc a:hover {
+  text-decoration: underline;
+}
+
+/* 表格样式 - 紧凑 */
+.theme-claude-docs .vp-doc table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: var(--vp-spacing-md) 0;
+  font-size: 0.9rem;
+}
+
+.theme-claude-docs .vp-doc th,
+.theme-claude-docs .vp-doc td {
+  border: 1px solid var(--vp-c-divider);
+  padding: var(--vp-spacing-sm) var(--vp-spacing-md);
+}
+
+.theme-claude-docs .vp-doc th {
+  background-color: var(--vp-c-bg-alt);
+  font-weight: 600;
+}
+
+/* 列表样式 - 紧凑 */
+.theme-claude-docs .vp-doc ul,
+.theme-claude-docs .vp-doc ol {
+  padding-left: var(--vp-spacing-lg);
+  line-height: var(--vp-line-height-base);
+}
+
+.theme-claude-docs .vp-doc li {
+  margin-bottom: var(--vp-spacing-xs);
+}
+
+/* 分割线 */
+.theme-claude-docs .vp-doc hr {
+  border: none;
+  border-top: 1px solid var(--vp-c-divider);
+  margin: var(--vp-spacing-xl) 0;
+}
+
+/* 按钮样式 - 技术感 */
+.theme-claude-docs .VPButton {
+  border-radius: var(--vp-radius-medium);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+/* 导航栏样式 */
+.theme-claude-docs .VPNav {
+  border-bottom: 1px solid var(--vp-c-divider-light);
+}

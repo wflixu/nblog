@@ -1,10 +1,12 @@
 <template>
   <div class="toggle-container">
-    <div class="toggle-header" @click="isOpen = !isOpen">
-      <span class="toggle-icon">{{ isOpen ? '▼' : '▶' }}</span>
-      <NRichText v-for="rtext in props.rich_text" v-bind="rtext" :key="rtext.plain_text"></NRichText>
+    <div class="toggle-header">
+      <span class="toggle-icon">▼</span>
+      <span class="toggle-title">
+        <NRichText v-for="rtext in props.rich_text" v-bind="rtext" :key="rtext.plain_text"></NRichText>
+      </span>
     </div>
-    <div v-if="isOpen" class="toggle-content">
+    <div class="toggle-content">
       <template v-for="child in props.children" :key="child.id">
         <NBlockOne v-bind="child"></NBlockOne>
       </template>
@@ -13,15 +15,11 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-
 const props = defineProps({
   rich_text: Array,
   color: String,
   children: Array
 })
-
-const isOpen = ref(false)
 </script>
 
 <style scoped>
@@ -33,17 +31,22 @@ const isOpen = ref(false)
 
 .toggle-header {
   padding: 8px 12px;
-  cursor: pointer;
   display: flex;
   align-items: center;
   gap: 8px;
   background: var(--vp-c-bg-soft);
+  font-weight: 500;
 }
 
 .toggle-icon {
-  font-size: 12px;
-  transition: transform 0.2s;
+  font-size: 10px;
   flex-shrink: 0;
+  color: var(--vp-c-text-2);
+}
+
+.toggle-title {
+  flex: 1;
+  color: var(--vp-c-text-1);
 }
 
 .toggle-content {

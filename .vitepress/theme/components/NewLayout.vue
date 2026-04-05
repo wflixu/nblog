@@ -14,3 +14,7 @@ import Copyright from './Copyright.vue'
 import { withBase } from "vitepress";
 const { Layout } = DefaultTheme
 </script>
+
+<style scoped>
+/* 暗色模式适配 */
+</style>
