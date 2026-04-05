@@ -33,7 +33,7 @@ const cleanUrl = computed(() => {
 <style scoped>
 .bookmark-card {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 12px;
   padding: 12px;
   margin: 12px 0;
@@ -42,6 +42,8 @@ const cleanUrl = computed(() => {
   text-decoration: none;
   color: var(--vp-c-text-1);
   transition: all 0.2s;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .bookmark-card:hover {
@@ -61,5 +63,9 @@ const cleanUrl = computed(() => {
 .bookmark-url {
   font-size: 12px;
   color: var(--vp-c-text-2);
+  word-break: break-all;
+  overflow-wrap: break-word;
+  max-width: 100%;
+  line-height: 1.4;
 }
 </style>

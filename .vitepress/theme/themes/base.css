@@ -1,0 +1,99 @@
+/* 基础 CSS 变量 - 默认值（会被主题类覆盖） */
+/* 这些变量定义在 :root 但会被 .theme-notion 或 .theme-claude-docs 覆盖 */
+:root {
+  /* 字体 */
+  --vp-font-family-base: system-ui, -apple-system, sans-serif;
+  --vp-font-family-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+
+  /* 基础颜色 - 默认值，会被主题覆盖 */
+  --vp-c-bg: #ffffff;
+  --vp-c-bg-soft: #f9f9f9;
+  --vp-c-bg-alt: #f0f0f0;
+  --vp-c-bg-elv: #ffffff;
+
+  --vp-c-text-1: #1a1a1a;
+  --vp-c-text-2: #666666;
+  --vp-c-text-3: #999999;
+
+  --vp-c-divider: #eaeaea;
+  --vp-c-divider-light: #eaeaea;
+  --vp-c-border: #e0e0e0;
+
+  --vp-c-brand: #2563eb;
+  --vp-c-brand-light: #3b82f6;
+  --vp-c-brand-lighter: #60a5fa;
+  --vp-c-brand-dark: #1d4ed8;
+  --vp-c-brand-darker: #1e40af;
+
+  --vp-c-text-code: #4a4a4a;
+
+  /* 阴影 */
+  --vp-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --vp-shadow-2: 0 4px 8px rgba(0, 0, 0, 0.08);
+  --vp-shadow-3: 0 8px 16px rgba(0, 0, 0, 0.12);
+
+  /* 圆角 - 默认值 */
+  --vp-radius-small: 4px;
+  --vp-radius-medium: 6px;
+  --vp-radius-large: 8px;
+
+  /* 间距 - 默认值 */
+  --vp-line-height-base: 1.6;
+  --vp-line-height-loose: 1.8;
+  --vp-spacing-xs: 4px;
+  --vp-spacing-sm: 8px;
+  --vp-spacing-md: 16px;
+  --vp-spacing-lg: 24px;
+  --vp-spacing-xl: 32px;
+
+  /* 代码块 */
+  --vp-code-block-bg: #f5f5f5;
+  --vp-code-line-height: 1.6;
+}
+
+/* 暗色模式基础变量 */
+.dark {
+  --vp-c-bg: #1a1a1a;
+  --vp-c-bg-soft: #242424;
+  --vp-c-bg-alt: #2a2a2a;
+  --vp-c-bg-elv: #1f1f1f;
+
+  --vp-c-text-1: #e0e0e0;
+  --vp-c-text-2: #a0a0a0;
+  --vp-c-text-3: #6a6a6a;
+
+  --vp-c-divider: #333333;
+  --vp-c-divider-light: #2a2a2a;
+  --vp-c-border: #3a3a3a;
+
+  --vp-c-brand: #3b82f6;
+  --vp-c-brand-light: #60a5fa;
+  --vp-c-brand-lighter: #93c5fd;
+  --vp-c-brand-dark: #2563eb;
+  --vp-c-brand-darker: #1d4ed8;
+
+  --vp-c-text-code: #c0c0c0;
+
+  --vp-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --vp-shadow-2: 0 4px 8px rgba(0, 0, 0, 0.3);
+  --vp-shadow-3: 0 8px 16px rgba(0, 0, 0, 0.4);
+
+  --vp-code-block-bg: #2a2a2a;
+}
+
+/* CSS 变量重置 - 确保基础样式 */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--vp-font-family-base);
+  font-size: 16px;
+  line-height: var(--vp-line-height-base);
+  color: var(--vp-c-text-1);
+  background-color: var(--vp-c-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

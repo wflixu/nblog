@@ -21,6 +21,9 @@ import NBlockQuote from './components/NBlockQuote.vue'
 import NBlockCallout from './components/NBlockCallout.vue'
 import NBlockBookmark from './components/NBlockBookmark.vue'
 import NBlockDivider from './components/NBlockDivider.vue'
+import NBlockTable from './components/NBlockTable.vue'
+import NBlockTableRow from './components/NBlockTableRow.vue'
+import NBlockEquation from './components/NBlockEquation.vue'
 import HomePage from './components/HomePage.vue'
 
 const components = {
@@ -38,7 +41,10 @@ const components = {
     NBlockQuote,
     NBlockCallout,
     NBlockBookmark,
-    NBlockDivider
+    NBlockDivider,
+    NBlockTable,
+    NBlockTableRow,
+    NBlockEquation
 }
 
 import './custom.css'

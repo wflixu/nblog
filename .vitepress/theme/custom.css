@@ -1,11 +1,17 @@
+/* 导入主题 CSS - 构建时通过环境变量选择主题 */
+@import './themes/base.css';
+
+/* 默认使用 notion 主题，可以通过 VITE_THEME 环境变量切换 */
+/* VITE_THEME=claude-docs pnpm build */
+@import './themes/notion.css';
+/* @import './themes/claude-docs.css'; */
+
+/* =====================================
+   项目特定的覆盖样式
+   ===================================== */
+
+/* 主题变量 - 由具体主题文件定义，这里只声明默认值 */
 :root {
-
-    --vp-c-brand: #2563eb !important;
-    --vp-c-brand-light: var(--vp-c-brand);
-    --vp-c-brand-lighter: var(--vp-c-brand);
-    --vp-c-brand-dark: var(--vp-c-brand);
-    --vp-c-brand-darker: var(--vp-c-brand);
-
     --vp-font-family-base: 'PingFang SC', 'Microsoft Yahei', sans-serif;
 
     /* pure theme color */
@@ -14,10 +20,10 @@
     --date-font-family: Georgia, sans-serif;
 }
 
+/* 暗色模式下的 li-dot-color */
 .dark {
-    --vp-c-brand: #3b82f6;
+    --li-dot-color: var(--vp-c-brand-light);
 }
-
 
 /* theme reset start */
 
@@ -32,8 +38,6 @@
     text-decoration: none;
 }
 
-.vp-doc p {}
-
 .content a[rel~='noreferrer']:link,
 a[rel~='noreferrer']:visited {
     color: var(--vp-c-brand);
@@ -46,18 +50,12 @@ a[rel~='noreferrer']:visited {
 }
 
 h1 {
-    /* font-size: 1.5rem !important;
-    font-weight: 500 !important; */
     padding-top: 14px;
 }
 
 h2 {
-    /* font-size: 1.125rem !important;
-    font-weight: 500 !important; */
     border-bottom: 1px solid var(--vp-c-divider-light);
 }
-
-
 
 /* for aside start */
 .aside {
@@ -73,13 +71,7 @@ h2 {
     max-width: 60rem !important;
 }
 
-.VPContent .container {
-    max-width: 60rem !important;
-    display: block !important;
-    position: relative;
-}
-
-/* content maxWidth*/
+/* content maxWidth */
 .VPDoc.has-aside .content-container {
     max-width: 60rem !important;
 }
@@ -130,6 +122,7 @@ h2 {
 }
 
 
+/* 响应式样式 */
 @media (min-width: 768px) {
     .VPDoc {
         padding-top: 10px !important;
@@ -154,7 +147,7 @@ h2 {
     }
 }
 
-/* when witdh less 1440 hide the aside 小于1440就到下一挡*/
+/* when width less 1440 hide the aside 小于 1440 就到下一挡 */
 @media (min-width: 1280px) {
     .VPDoc .aside {
         display: none !important;
@@ -168,7 +161,7 @@ h2 {
 }
 
 
-/*mobile*/
+/* mobile */
 @media screen and (max-width: 768px) {
     .VPDoc {
         padding-top: 10px !important;
@@ -205,7 +198,7 @@ h2 {
 /* for aside end */
 /* theme reset end */
 
-/*tags and archives page style*/
+/* tags and archives page style */
 .posts {
     padding: 4px 0 4px 25px;
     display: flex;
