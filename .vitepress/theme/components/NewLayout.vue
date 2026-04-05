@@ -34,11 +34,12 @@
 <script setup>
 import DefaultTheme from 'vitepress/theme'
 import Copyright from './Copyright.vue'
-import { useData } from 'vitepress'
+import { useData, useRoute } from 'vitepress'
 import { computed, onMounted, watch } from 'vue'
 import { withBase } from 'vitepress'
 
 const { page } = useData()
+const route = useRoute()
 const metaData = computed(() => page.value?.frontmatter || {})
 
 // 只有当更新日期与发布日期不同时才显示更新日期
@@ -72,9 +73,12 @@ onMounted(() => {
     moveMetaInfo()
 })
 
-// 监听页面变化，在 SPA 导航时重新移动 meta 信息
-watch(() => page.value.path, () => {
-    moveMetaInfo()
+// 监听路由变化，在 SPA 导航时重新移动 meta 信息
+watch(() => route.path, () => {
+    // 等待 Vue 组件更新完成和 DOM 渲染
+    setTimeout(() => {
+        moveMetaInfo()
+    }, 200)
 }, { flush: 'post' })
 </script>
 

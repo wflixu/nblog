@@ -37,14 +37,25 @@ const code = props.rich_text.reduce((prev, cur) => {
 // 渲染代码高亮的函数
 const renderCode = async () => {
   const theme = isDark.value ? 'github-dark' : 'github-light'
+  const lang = props.language || 'text'
+
+  // 对于 plain text，直接使用 pre/code 标签渲染，避免 shiki 处理问题
+  if (lang === 'text' || !props.language) {
+    const escapedCode = code
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+    htmlStr.value = `<div class="language-text"><pre><code>${escapedCode}</code></pre></div>`
+    return
+  }
 
   const html = await codeToHtml(code, {
-    lang: props.language || 'text',
+    lang,
     theme
   })
 
   // 包装在 div 中以匹配 VitePress 结构
-  htmlStr.value = `<div class="language-${props.language || 'text'}"><span class="lang">${props.language || 'text'}</span>${html}</div>`
+  htmlStr.value = `<div class="language-${lang}"><span class="lang">${lang}</span>${html}</div>`
 }
 
 // 复制代码
