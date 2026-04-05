@@ -163,7 +163,7 @@ onUnmounted(() => {
 
 .post-info {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   align-items: center;
   flex-wrap: wrap;
 }
@@ -171,6 +171,7 @@ onUnmounted(() => {
 .post-info .category {
   display: inline-flex;
   align-items: center;
+  margin: 0;
 }
 
 .post-info .category a {
@@ -187,17 +188,21 @@ onUnmounted(() => {
 .post-info .tag {
   display: inline-flex;
   background-color: transparent;
+  margin: 0 !important;
+  padding: 0 !important;
+  gap: 0 !important;
 }
 
 .post-info .tag a {
   color: var(--vp-c-brand);
-  font-size: 0.8rem;
-  padding: 2px 8px;
+  font-size: 0.75rem;
+  padding: 1px 6px;
   background-color: var(--vp-c-bg-soft);
-  border-radius: 6px;
+  border-radius: 4px;
   text-decoration: none;
   transition: all 0.2s ease;
   border: 1px solid var(--vp-c-divider-light);
+  margin: 0;
 }
 
 .post-info .tag a:hover {
