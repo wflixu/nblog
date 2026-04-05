@@ -135,6 +135,7 @@ async function getPosts(pageSize: number) {
         const data = {
             title,
             date: _convertDate(item.last_edited_time),
+            last_edited_time: item.last_edited_time,
             tags: item.properties.Tags.multi_select.map((tag: any) => tag.name),
             category: item.properties.Category.select?.name ?? '未分类',
         }

@@ -10,6 +10,9 @@ const pageSize = 10
 const blocksDir = path.resolve(process.cwd(), 'public', 'blocks-data')
 mkdirSync(blocksDir, { recursive: true })
 
+// 预加载文章列表
+const postsData = await getPosts(pageSize)
+
 export default defineConfig({
     title: 'Today',
     base: '/',
@@ -25,7 +28,7 @@ export default defineConfig({
         lastmodDateOnly: false
     },
     themeConfig: {
-        posts: await getPosts(pageSize),
+        posts: postsData,
         website: 'https://github.com/wflixu/nblog', //copyright link
         // 评论的仓库地址
         comment: {
@@ -77,9 +80,17 @@ export default defineConfig({
             const blocksFilePath = path.join(blocksDir, `${pageData.params.id}.json`)
             writeFileSync(blocksFilePath, JSON.stringify(blocks), 'utf-8')
 
+            // 从 themeConfig.posts 中查找对应的文章数据
+            const postData = postsData.find((post: any) => post.regularPath === `/posts/${pageData.params.id}`)
+            const frontMatter = postData?.frontMatter || {}
+
             // 只返回 blocks 文件的路径，而不是 blocks 数据本身
             return {
-                blocksPath: `/blocks-data/${pageData.params.id}.json`
+                blocksPath: `/blocks-data/${pageData.params.id}.json`,
+                frontmatter: {
+                    ...frontMatter,
+                    page: false // 标记这是文章详情页
+                }
             }
         }
         return {}
