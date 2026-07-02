@@ -14,3 +14,8 @@ origin_theme.css
 public/assets/images/*
 public/blocks-data/*
 .env
+.nblog-build
+cli-dist
+dist.zip
+nblog.config.json
+.nblogrc

@@ -1,18 +1,28 @@
 {
   "name": "nblog",
-  "version": "1.3.0",
-  "description": "",
-  "main": "index.js",
+  "version": "2.0.0",
+  "description": "A CLI tool to build beautiful blogs from Obsidian markdown files",
+  "type": "module",
+  "bin": {
+    "nblog": "./bin/nblog.js"
+  },
+  "files": [
+    "bin",
+    "cli-dist",
+    "template"
+  ],
   "scripts": {
     "dev": "vitepress dev --host 0.0.0.0",
     "build": "vitepress build",
     "preview": "vitepress preview",
-    "clean": "rm -rf .vitepress/cache public/blocks-data/*"
+    "clean": "rm -rf .vitepress/cache public/blocks-data/*",
+    "build:cli": "tsdown",
+    "dev:cli": "tsdown --watch",
+    "nblog": "node bin/nblog.js"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["blog", "obsidian", "vitepress", "cli", "static-site"],
+  "author": "wflixu",
   "license": "ISC",
-  "type": "module",
   "devDependencies": {
     "@types/node": "^24.10.4",
     "@typescript-eslint/eslint-plugin": "^8.51.0",
@@ -27,10 +37,14 @@
     "eslint-plugin-vue": "^10.6.2",
     "flatted": "^3.3.3",
     "globby": "^16.1.0",
-    "gray-matter": "^4.0.3",
     "prettier": "^3.7.4",
     "shiki": "^3.20.0",
-    "typescript": "^5.9.3",
+    "tsdown": "^0.22.3",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "commander": "^15.0.0",
+    "gray-matter": "^4.0.3",
     "vitepress": "^1.6.4"
   }
 }

@@ -1,149 +1,163 @@
-# Blog powered by VitePress and Notion
-![](./public/favicon.svg)
+# nblog
+
+A CLI tool to build beautiful blogs from Obsidian markdown files.
 
 [Live Demo](http://blog.wflixu.cn)
 
-## 动机
+## 简介
 
-之前用过很多的 blog 程序，比如 hexo,astro，nextjs 等，这些程序发布完成了，下次写blog就忘记了，一般在项目中写 markdown 文件，体验不好，自己以后总结和查看都不方便，一直想找一个编辑体验如 Notion Obsidian 的笔记软件，展示可以自定义样式，现在用 Vitepress + Notion ，终于实现了这个功能，Notion 作为 markdown 编辑器 和 blog CMS，Vitepress 作为博客渲染器，完美结合。
+nblog 是一个基于 Obsidian + VitePress 的博客构建工具。你可以在 Obsidian 中写文章（Markdown），然后通过 nblog CLI 生成静态博客站点。
 
+### 特性
 
-## 使用方法
+- 📝 **Obsidian 语法支持** — Callout、Wikilink、图片嵌入、高亮语法自动转换
+- 🎨 **双主题切换** — Notion 风格 / Claude Docs 风格，客户端实时切换
+- 📂 **归档/分类/标签** — 自动按年归档、按分类和标签筛选
+- 🔍 **全文搜索** — 内置 VitePress 本地搜索
+- ⚡ **快速构建** — 基于 VitePress SSG，生成静态 HTML
 
+## 快速开始
 
-
-### 1. 安装依赖
+### 安装
 
 ```bash
+npm install -g nblog
+```
+
+或者从源码使用：
+
+```bash
+# 克隆项目
+git clone https://github.com/wflixu/nblog.git
+cd nblog
+
+# 安装依赖
 pnpm install
-# 或
-npm install
+
+# 构建 CLI
+pnpm build:cli
 ```
 
-### 2. 配置环境变量
-
-复制 `.env.example` 文件为 `.env`，并填入你的 Notion API 配置：
+### 使用
 
 ```bash
-cp .env.example .env
+# 从 Obsidian 目录构建静态站点
+nblog build /path/to/your/obsidian/vault/blogs
+
+# 指定输出目录
+nblog build ./blogs -o ./dist
+
+# 启动开发服务器
+nblog dev ./blogs --port 5000
 ```
 
-编辑 `.env` 文件：
+### 文章格式
 
-```env
-NOTION_TOKEN=ntn_xxxxxxxxxxxx
-DATABASE_ID=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-API_HOST=https://api.notion.com/v1
+你的 Obsidian 文章需要包含 `title` 和 `published` 的 frontmatter：
+
+```markdown
+---
+title: 我的文章标题
+published: 2024-01-01
+tags: [技术, Vue]
+category: 前端
+description: 文章简介
+---
+
+文章内容...
 ```
 
-#### 获取 Notion API Token
+#### 标准字段说明
 
-1. 访问 [Notion Developers](https://www.notion.so/my-integrations)
-2. 点击 "New integration" 创建一个新的集成
-3. 复制 "Internal Integration Token"（格式：`ntn_...`）
-4. 将其填入 `.env` 文件的 `NOTION_TOKEN`
+| 字段 | 必填 | 说明 |
+|------|------|------|
+| `title` | ✅ | 文章标题 |
+| `published` | ✅ | 发布日期，格式 `YYYY-MM-DD` |
+| `tags` | ❌ | 标签，数组或逗号分隔 |
+| `category` | ❌ | 分类 |
+| `description` | ❌ | 文章简介 |
 
-#### 获取 Database ID
+### 支持的 Obsidian 语法
 
-1. 在 Notion 中打开你的博客数据库
-2. 从 URL 中复制 Database ID（32位字符）
-3. 将其填入 `.env` 文件的 `DATABASE_ID`
+- `[!note]` / `[!tip]` / `[!warning]` 等 **Callout** 语法
+- `[[page]]` / `[[page|别名]]` **Wikilink**
+- `![[image.png]]` **图片嵌入**
+- `==高亮文本==` **高亮语法**
 
-#### ⚠️ 注意事项
+## 命令
 
-- **永远不要**将 `.env` 文件提交到 Git
-- `.env` 文件已经在 `.gitignore` 中，不会被提交
-- 只提交 `.env.example` 作为模板
+### `nblog build <dir>`
 
-## Notion API 集成
+从 Obsidian 目录构建静态站点。
 
-本项目使用 **Notion API 2025-09-03** 版本，提供三个公共方法用于与 Notion 交互：
+| 选项 | 描述 | 默认值 |
+|------|------|--------|
+| `-o, --output <dir>` | 输出目录 | `./dist` |
+| `--title <title>` | 站点标题 | `My Blog` |
+| `--base <path>` | 基础 URL 路径 | `/` |
+| `--description <desc>` | 站点描述 | `A blog powered by nblog` |
+| `--hostname <hostname>` | 站点域名（启用 sitemap） | - |
+| `--theme <theme>` | 主题名称 (`notion` 或 `claude-docs`) | `notion` |
 
-### 公共 API 方法
+### `nblog dev <dir>`
 
-所有 API 方法位于 `.vitepress/theme/notionApi.js`：
+启动开发服务器。
 
-#### 1. `getDataSourceId()` - 获取 Data Source ID
+| 选项 | 描述 | 默认值 |
+|------|------|--------|
+| `--port <port>` | 开发服务器端口 | `5000` |
+| `--title <title>` | 站点标题 | `My Blog` |
+| `--base <path>` | 基础 URL 路径 | `/` |
+| `--description <desc>` | 站点描述 | `A blog powered by nblog` |
+| `--theme <theme>` | 主题名称 | `notion` |
 
-根据 Notion API 2025-09-03 升级，需要先获取 data_source_id：
-
-```javascript
-import { getDataSourceId } from './.vitepress/theme/notionApi.js'
-
-const dataSourceId = await getDataSourceId()
-// 返回: data_source_id (如果获取失败则返回 databaseId)
-```
-
-#### 2. `queryNotionDatabase(dataSourceId)` - 查询数据库文章
-
-使用 data_source_id 查询已发布的文章：
-
-```javascript
-import { queryNotionDatabase } from './.vitepress/theme/notionApi.js'
-
-const results = await queryNotionDatabase(dataSourceId)
-// 返回: 文章数组（已过滤"状态=发布"的记录）
-```
-
-**查询条件：**
-- `filter`: 状态 = "发布"
-- `sorts`: Last edited time 降序
-
-#### 3. `getPageBlocks(pageId)` - 获取页面 Blocks（支持分页）
-
-自动分页获取页面的所有 blocks：
-
-```javascript
-import { getPageBlocks } from './.vitepress/theme/notionApi.js'
-
-const blocks = await getPageBlocks(pageId)
-// 返回: 所有 blocks 数组（自动处理分页）
-```
-
-**特性：**
-- ✅ 自动分页：当 blocks 超过 1000 时自动请求下一页
-- ✅ 使用 `next_cursor` 实现分页
-- ✅ 直到 `has_more: false` 才停止
-
-**分页示例：**
-```
-Fetched 100 blocks, fetching more... (total so far: 100)
-Fetched 100 blocks, fetching more... (total so far: 200)
-get blocks success for pageid xxx cached 154 blocks
-```
-
-### API 版本说明
-
-- **API 版本**: `2025-09-03`
-- **变更**: 使用 data sources 架构替代原有的 database 查询
-- **兼容性**: 向后兼容，自动降级到 databaseId
-
-## 接口
-
-###
-
-### 3. 启动开发服务器
+## 开发命令
 
 ```bash
-pnpm run dev
-# 或
-npm run dev
+pnpm install       # 安装依赖
+pnpm build:cli     # 构建 CLI
+pnpm dev:cli       # 开发模式（watch）
+pnpm dev           # VitePress 开发服务器
+pnpm build         # VitePress 构建
 ```
 
-### 4. 构建生产版本
+## 主题
+
+内置两套主题，可以通过页面右上角的主题切换按钮实时切换：
+
+- **Notion 风格** — 极简、宽松留白、纸质质感
+- **Claude Docs 风格** — 技术精致主义、高对比度
+
+也可以通过 CLI 设置默认主题：
 
 ```bash
-pnpm run build
-# 或
-npm run build
+nblog build ./blogs --theme claude-docs
 ```
 
+## 项目结构
+
+```
+nblog/
+├── src/                  # CLI 源码
+│   ├── cli.ts            # 入口（Commander 命令）
+│   ├── scanner.ts        # 扫描 Obsidian Markdown
+│   ├── generate-config.ts # 生成构建目录
+│   ├── obsidian-transform.ts # Obsidian 语法转换
+│   └── build.ts          # VitePress 构建/开发
+├── template/             # 博客模板
+│   └── .vitepress/
+│       ├── config.ts     # VitePress 配置
+│       └── theme/        # 主题组件和样式
+├── bin/nblog.js          # CLI 入口文件
+├── tsdown.config.ts      # CLI 构建配置
+└── cli-dist/             # 构建产物
+```
 
 ## 感谢
 
-这个仓库是 根据 [airene vitepress-blog-pure](https://github.com/airene/vitepress-blog-pure) 改造的，原来是用本地md 文档管理博客，因为 vitpress 有SSG 的功能，改造成用Notion作为编辑端和管理端，vitepress 作为博客的渲染器，这样可以更好的管理博客文章，写博文是编辑体验更好。
+- [VitePress](https://vitepress.vuejs.org/) — 静态站点生成器
+- [airene/vitepress-blog-pure](https://github.com/airene/vitepress-blog-pure) — 博客主题灵感
 
 ## 开源协议
 
 本项目采用 [MIT License](LICENSE) 开源协议。
-

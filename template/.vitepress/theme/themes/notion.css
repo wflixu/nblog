@@ -1,0 +1,320 @@
+/* Notion 风格主题 - 极简、宽松留白、柔和中性色 + 纸质质感 */
+
+/* 主题类名前缀 .theme-notion - 使用 html 选择器提高优先级 */
+html.theme-notion,
+.theme-notion {
+  /* 背景色 - 温暖的纸张质感 */
+  --vp-c-bg: #ffffff;
+  --vp-c-bg-soft: #f7f7f5;
+  --vp-c-bg-alt: #f7f7f5;
+  --vp-c-bg-elv: #ffffff;
+
+  /* 文字色 - 温暖的深灰色，模拟印刷墨色 */
+  --vp-c-text-1: #37352f;
+  --vp-c-text-2: #75756f;
+  --vp-c-text-3: #9b9a97;
+
+  /* 分割线和边框 */
+  --vp-c-divider: #eaeaea;
+  --vp-c-divider-light: #eaeaea;
+  --vp-c-border: #e1e1e0;
+
+  /* 品牌色 - Notion 蓝色 */
+  --vp-c-brand: #0066ff;
+  --vp-c-brand-light: #1a75ff;
+  --vp-c-brand-lighter: #4d94ff;
+  --vp-c-brand-dark: #0052cc;
+  --vp-c-brand-darker: #0044aa;
+
+  /* 代码块背景 */
+  --vp-code-block-bg: #f7f7f5;
+  --vp-c-text-code: #37352f;
+
+  /* 圆角 - 较小，模拟纸张边缘 */
+  --vp-radius-small: 3px;
+  --vp-radius-medium: 4px;
+  --vp-radius-large: 6px;
+
+  /* 间距 - 宽松，呼吸感 */
+  --vp-line-height-base: 1.8;
+  --vp-line-height-loose: 2.0;
+  --vp-spacing-xs: 6px;
+  --vp-spacing-sm: 10px;
+  --vp-spacing-md: 18px;
+  --vp-spacing-lg: 28px;
+  --vp-spacing-xl: 36px;
+
+  /* 阴影 - 柔和，模拟纸张浮起 */
+  --vp-shadow-1: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --vp-shadow-2: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --vp-shadow-3: 0 8px 24px rgba(0, 0, 0, 0.10);
+
+  /* Notion 特有：微妙的高光效果 */
+  --notion-highlight: rgba(255, 229, 100, 0.3);
+  --notion-selection: rgba(35, 131, 226, 0.2);
+}
+
+/* Notion 风格暗色模式 - 模拟深色笔记本 */
+html.theme-notion.dark,
+.theme-notion.dark,
+.dark {
+  --vp-c-bg: #191919;
+  --vp-c-bg-soft: #202020;
+  --vp-c-bg-alt: #202020;
+  --vp-c-bg-elv: #191919;
+
+  --vp-c-text-1: #d4d4d4;
+  --vp-c-text-2: #9b9a97;
+  --vp-c-text-3: #6f6f6f;
+
+  --vp-c-divider: #2f2f2f;
+  --vp-c-divider-light: #2a2a2a;
+  --vp-c-border: #2f2f2f;
+
+  --vp-c-brand: #0066ff;
+  --vp-c-brand-light: #1a75ff;
+  --vp-c-brand-lighter: #4d94ff;
+  --vp-c-brand-dark: #0052cc;
+  --vp-c-brand-darker: #0044aa;
+
+  --vp-code-block-bg: #202020;
+  --vp-c-text-code: #d4d4d4;
+
+  --vp-shadow-1: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --vp-shadow-2: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --vp-shadow-3: 0 8px 24px rgba(0, 0, 0, 0.5);
+
+  --notion-highlight: rgba(255, 229, 100, 0.15);
+  --notion-selection: rgba(35, 131, 226, 0.15);
+}
+
+/* ========== Notion 风格细节增强 ========== */
+
+/* 添加微妙的纸张纹理效果 */
+.theme-notion body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  opacity: 0.02;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.theme-notion.dark body::before {
+  opacity: 0.015;
+}
+
+/* 选中文本的高亮色 */
+.theme-notion ::selection {
+  background-color: var(--notion-selection);
+}
+
+/* 平滑滚动 */
+.theme-notion html {
+  scroll-behavior: smooth;
+}
+
+/* Notion 风格的特定组件样式覆盖 */
+.theme-notion .vp-doc p {
+  line-height: var(--vp-line-height-loose);
+  margin-bottom: var(--vp-spacing-md);
+}
+
+.theme-notion .vp-doc pre {
+  border-radius: var(--vp-radius-medium);
+  background-color: var(--vp-code-block-bg);
+  padding: var(--vp-spacing-md);
+  box-shadow: var(--vp-shadow-1);
+  border: 1px solid var(--vp-c-divider);
+  overflow-x: auto;
+}
+
+/* Notion 风格代码块 - 模拟代码编辑器 */
+.theme-notion .vp-doc .language-text,
+.theme-notion .vp-doc pre[class*="language-"] {
+  background: var(--vp-code-block-bg);
+  border: 1px solid var(--vp-c-divider);
+  border-radius: var(--vp-radius-medium);
+  margin: var(--vp-spacing-md) 0;
+}
+
+.theme-notion .vp-doc .vp-code {
+  margin: 0;
+  border-radius: var(--vp-radius-medium);
+}
+
+.theme-notion .vp-doc code {
+  font-family: var(--vp-font-family-mono);
+  font-size: 0.85em;
+  background-color: var(--vp-code-block-bg);
+  padding: 2px 6px;
+  border-radius: var(--vp-radius-small);
+  border: 1px solid var(--vp-c-divider-light);
+  color: var(--vp-c-text-code);
+}
+
+/* 代码块中的行 */
+.theme-notion .vp-doc pre code {
+  padding: 0;
+  border: none;
+  background: transparent;
+  line-height: 1.6;
+}
+
+/* 代码块语言标签 - Notion 风格 */
+.theme-notion .vp-doc div[class*="language-"] .lang {
+  display: inline-block;
+  font-size: 0.7rem;
+  color: var(--vp-c-text-3);
+  font-family: var(--vp-font-family-mono);
+  margin-bottom: var(--vp-spacing-xs);
+  padding: 2px 6px;
+  background-color: var(--vp-c-bg-alt);
+  border-radius: var(--vp-radius-small);
+}
+
+/* 代码块复制按钮样式 */
+.theme-notion .vp-doc .copy-button {
+  background-color: var(--vp-c-bg-alt);
+  border: 1px solid var(--vp-c-divider);
+  border-radius: var(--vp-radius-small);
+  color: var(--vp-c-text-2);
+}
+
+.theme-notion .vp-doc .copy-button:hover {
+  background-color: var(--vp-c-brand);
+  border-color: var(--vp-c-brand);
+  color: white;
+}
+
+/* 行内代码高亮 */
+.theme-notion .vp-doc p code,
+.theme-notion .vp-doc li code,
+.theme-notion .vp-doc td code {
+  background-color: var(--vp-c-bg-alt);
+  padding: 2px 6px;
+  border-radius: var(--vp-radius-small);
+  font-size: 0.85em;
+  color: var(--vp-c-text-code);
+  border: 1px solid var(--vp-c-divider-light);
+}
+
+/* Notion 风格的标题 - 模拟杂志排版 */
+.theme-notion .vp-doc h1 {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-top: calc(var(--vp-spacing-xl) * 1.5);
+  margin-bottom: var(--vp-spacing-md);
+  color: var(--vp-c-text-1);
+}
+
+.theme-notion .vp-doc h2 {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin-top: calc(var(--vp-spacing-xl) * 1.2);
+  margin-bottom: var(--vp-spacing-sm);
+  padding-bottom: var(--vp-spacing-sm);
+  border-bottom: 1px solid var(--vp-c-divider);
+}
+
+.theme-notion .vp-doc h3 {
+  font-weight: 600;
+  margin-top: var(--vp-spacing-lg);
+  margin-bottom: var(--vp-spacing-xs);
+}
+
+/* Callout 块全宽彩色背景 - Notion 风格 */
+.theme-notion .vp-doc .custom-block {
+  border-radius: var(--vp-radius-small);
+  padding: var(--vp-spacing-md) var(--vp-spacing-lg);
+  margin: var(--vp-spacing-md) 0;
+  border-left: 4px solid var(--vp-c-brand);
+  background-color: var(--vp-c-bg-soft);
+}
+
+/* 引用块样式 - 模拟书本引用 */
+.theme-notion .vp-doc blockquote {
+  border-left: 3px solid var(--vp-c-divider);
+  padding-left: var(--vp-spacing-md);
+  margin-left: 0;
+  color: var(--vp-c-text-2);
+  font-style: italic;
+  background-color: var(--vp-c-bg-soft);
+  padding: var(--vp-spacing-sm) var(--vp-spacing-md);
+  border-radius: 0 var(--vp-radius-small) var(--vp-radius-small) 0;
+}
+
+/* 链接样式 - 微妙的下划线动画 */
+.theme-notion .vp-doc a {
+  color: var(--vp-c-brand);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s ease;
+}
+
+.theme-notion .vp-doc a:hover {
+  border-bottom-color: var(--vp-c-brand);
+}
+
+/* 表格样式 - Notion 风格表格 */
+.theme-notion .vp-doc table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: var(--vp-spacing-lg) 0;
+  font-size: 0.95rem;
+  border: 1px solid var(--vp-c-divider);
+}
+
+.theme-notion .vp-doc th,
+.theme-notion .vp-doc td {
+  border: 1px solid var(--vp-c-divider);
+  padding: var(--vp-spacing-sm) var(--vp-spacing-md);
+}
+
+.theme-notion .vp-doc th {
+  background-color: var(--vp-c-bg-soft);
+  font-weight: 600;
+}
+
+.theme-notion .vp-doc tr:nth-child(even) {
+  background-color: var(--vp-c-bg-soft);
+}
+
+/* 列表样式 - 宽松层级 */
+.theme-notion .vp-doc ul,
+.theme-notion .vp-doc ol {
+  padding-left: var(--vp-spacing-lg);
+  line-height: var(--vp-line-height-loose);
+}
+
+.theme-notion .vp-doc li {
+  margin-bottom: var(--vp-spacing-sm);
+}
+
+.theme-notion .vp-doc li::marker {
+  color: var(--vp-c-brand);
+}
+
+/* 分割线 - 微妙的分隔 */
+.theme-notion .vp-doc hr {
+  border: none;
+  border-top: 1px solid var(--vp-c-divider);
+  margin: var(--vp-spacing-xl) 0;
+}
+
+/* 图片样式 - 圆角 + 阴影 */
+.theme-notion .vp-doc img {
+  border-radius: var(--vp-radius-medium);
+  box-shadow: var(--vp-shadow-2);
+}
+
+/* 代码块语言标签 */
+.theme-notion .vp-doc .lang {
+  font-size: 0.75rem;
+  color: var(--vp-c-text-3);
+  margin-bottom: var(--vp-spacing-xs);
+}
