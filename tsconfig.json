@@ -24,17 +24,16 @@
         "ignoreDeprecations": "6.0"
     },
     "include": [
-        ".vitepress/**/*.ts",
-        ".vitepress/**/*.d.ts",
-        ".vitepress/**/*.tsx",
-        ".vitepress/**/*.vue",
-        ".vitepress/**/*.vue",
-        "shims-vue.d.ts",
-        "api.config.ts",
-        "api.config.ts"
+        "src/**/*.ts",
+        "template/.vitepress/**/*.ts",
+        "template/.vitepress/**/*.d.ts",
+        "template/.vitepress/**/*.vue",
+        "shims-vue.d.ts"
     ],
     "exclude": [
         "dist",
+        "cli-dist",
+        ".nblog-build",
         "node_modules"
     ]
 }

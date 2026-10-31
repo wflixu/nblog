@@ -1,0 +1,9 @@
+{
+  "source": "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/MYOBBAK/blogs",
+  "title": "Today",
+  "description": "vitepress,blog,blog-theme",
+  "base": "/",
+  "hostname": "https://blog.wflixu.cn",
+  "theme": "notion",
+  "port": 5001
+}

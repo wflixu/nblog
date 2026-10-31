@@ -1,0 +1,302 @@
+/* 导入基础 CSS */
+@import './themes/base.css';
+
+/* 主题 CSS（按需由 ThemeSwitch 切换） */
+@import './themes/notion.css';
+@import './themes/claude-docs.css';
+
+/* =====================================
+   项目特定的覆盖样式
+   ===================================== */
+
+:root {
+    --vp-font-family-base: 'PingFang SC', 'Microsoft Yahei', sans-serif;
+    --li-dot-color: var(--vp-c-brand);
+    --date-color: var(--vp-c-text-2);
+    --date-font-family: Georgia, sans-serif;
+}
+
+.dark {
+    --li-dot-color: var(--vp-c-brand-light);
+}
+
+/* theme reset */
+.Layout {
+    min-height: calc(100vh - 78px) !important;
+}
+
+.vp-doc a {
+    color: var(--vp-c-text-1);
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.content a[rel~='noreferrer']:link,
+a[rel~='noreferrer']:visited {
+    color: var(--vp-c-brand);
+    font-weight: 500 !important;
+    border-bottom: 1px solid var(--vp-c-brand);
+}
+
+.content a[rel~='noreferrer']:hover {
+    color: #888;
+}
+
+h1 {
+    padding-top: 14px;
+}
+
+h2 {
+    border-bottom: 1px solid var(--vp-c-divider-light);
+}
+
+.aside {
+    position: fixed !important;
+    right: 24px;
+}
+
+.VPDoc {
+    padding-top: 10px !important;
+}
+
+.container {
+    max-width: 60rem !important;
+}
+
+.VPDoc.has-aside .content-container {
+    max-width: 60rem !important;
+}
+
+.vp-doc h1,
+.vp-doc h2,
+.vp-doc h3 {
+    border-top: none !important;
+    border-bottom: none !important;
+}
+
+.vp-doc h1 {
+    font-size: 30px;
+    font-weight: 600;
+    line-height: 1.5;
+    margin-top: 2em;
+    margin-bottom: 4px;
+    padding-top: 4px;
+    color: var(--vp-c-text-1);
+}
+
+.vp-doc h2 {
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1.4;
+    margin-top: 1.4em;
+    margin-bottom: 1px;
+    padding-top: 4px;
+    color: var(--vp-c-text-1);
+}
+
+.vp-doc h3 {
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.5;
+    margin-top: 16px;
+    padding-top: 2px;
+    color: var(--vp-c-text-1);
+}
+
+.page {
+    background-color: var(--vp-c-bg-soft);
+}
+
+/* 响应式 */
+@media (min-width: 768px) {
+    .VPDoc {
+        padding-top: 10px !important;
+    }
+}
+
+@media (min-width: 960px) {
+    .VPDoc {
+        padding-top: 10px !important;
+    }
+
+    .VPDoc:not(.has-sidebar) .content {
+        max-width: inherit !important;
+    }
+
+    .VPDocAsideOutline .content {
+        padding-left: 14px !important;
+    }
+
+    .content {
+        padding: 0 !important;
+    }
+}
+
+@media (min-width: 1280px) {
+    .VPDoc .aside {
+        display: none !important;
+    }
+}
+
+@media (min-width: 1440px) {
+    .VPDoc .aside {
+        display: block !important;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .VPDoc {
+        padding-top: 10px !important;
+        padding-bottom: 20px !important;
+    }
+
+    .vp-doc h1 {
+        font-size: 1.25rem !important;
+        border-bottom: none !important;
+    }
+
+    .vp-doc h2 {
+        border-top: none !important;
+        border-bottom: none !important;
+    }
+
+    .posts {
+        padding: 4px;
+    }
+
+    .post-dot {
+        margin-right: 4px;
+    }
+
+    .post-container {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 16.5em;
+    }
+}
+
+/* tags and archives page style */
+.posts {
+    padding: 4px 0 4px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.post-dot {
+    display: inline-block;
+    margin-right: 10px;
+    margin-bottom: 3px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background-color: var(--li-dot-color);
+}
+
+.post-container {
+    color: var(--vp-c-text-2);
+    font-size: 0.9375rem;
+    font-weight: 400;
+}
+
+.post-container:hover {
+    color: var(--vp-c-brand);
+}
+
+.date {
+    color: var(--date-color);
+    font-family: var(--date-font-family);
+}
+
+.post-info {
+    font-size: 12px;
+}
+
+.post-info span {
+    display: inline-block;
+    padding: 0 8px;
+    background-color: var(--vp-c-bg-alt);
+    margin-right: 10px;
+    transition: 0.4s;
+    border-radius: 2px;
+    color: var(--vp-c-text-1);
+}
+
+.page {
+    line-height: 1.8;
+    font-size: 18px;
+    padding: 6% 8% 4% 8%;
+    border: 1px solid var(--vp-c-divider-light);
+    background-color: var(--vp-c-bg-soft);
+    color: var(--vp-c-text-1);
+
+    .title {
+        font-size: 2.2em;
+        font-weight: 700;
+        line-height: 1.3;
+        margin-top: 40px;
+        margin-bottom: 32px;
+        padding-bottom: 16px;
+        border-bottom: 2px solid var(--vp-c-divider-light);
+        color: var(--vp-c-text-1);
+    }
+}
+
+/* =====================================
+   Obsidian Callout 样式
+   ===================================== */
+.vp-doc blockquote.callout {
+    border-radius: var(--vp-radius-medium);
+    padding: var(--vp-spacing-md) var(--vp-spacing-lg);
+    margin: var(--vp-spacing-md) 0;
+    border-left: 4px solid var(--vp-c-brand);
+    background-color: var(--vp-c-bg-soft);
+    font-style: normal;
+    color: var(--vp-c-text-1);
+}
+
+.vp-doc blockquote.callout .callout-title {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--vp-c-text-1);
+}
+
+.vp-doc blockquote.callout .callout-icon {
+    font-size: 1.1em;
+}
+
+/* Callout 类型颜色 */
+.vp-doc blockquote.callout-note {
+    border-left-color: #3b82f6;
+}
+
+.vp-doc blockquote.callout-tip {
+    border-left-color: #10b981;
+}
+
+.vp-doc blockquote.callout-warning {
+    border-left-color: #f59e0b;
+}
+
+.vp-doc blockquote.callout-danger {
+    border-left-color: #ef4444;
+}
+
+.vp-doc blockquote.callout-info {
+    border-left-color: #06b6d4;
+}
+
+/* 高亮文本 */
+.vp-doc mark {
+    background-color: var(--notion-highlight, rgba(255, 229, 100, 0.3));
+    padding: 1px 4px;
+    border-radius: 2px;
+}
+
+.dark .vp-doc mark {
+    background-color: var(--notion-highlight, rgba(255, 229, 100, 0.15));
+}
