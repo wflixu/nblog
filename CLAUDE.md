@@ -1,116 +1,139 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Claude Code when working in this repository.
 
 ## 项目概述
 
-这是一个基于 VitePress 和 Notion 的博客系统。Notion 作为 CMS 和编辑器，VitePress 作为静态站点生成器。
+nblog 是一个把 **Obsidian 目录**构建成 **VitePress 静态博客 zip** 的 CLI 工具。
 
-- Notion API 用于获取文章内容和元数据
-- VitePress 用于渲染博客前端
-- 文章页面通过动态路由 `posts/[id].md` 生成
+- 博客内容不存放在本仓库，继续保存在 Obsidian 中。
+- 源目录通过命令行参数传入，或写在 `nblog.config.json` 的 `source`。
+- 默认在**当前目录**生成 `<源目录名>.zip`。
+- 本仓库只负责构建：CLI 源码在 `src/`，站点模板在 `template/`。
+- 已完全移除 Notion API 依赖。`notion` 只是内置主题名。
 
-## 环境变量配置
-
-需要在 `.env` 或 `justfile` 中配置以下变量：
-
-- `NOTION_TOKEN`: Notion API 认证令牌
-- `DATABASE_ID`: Notion 数据库 ID（存储博客文章）
-- `API_HOST`: Notion API 端点（默认: `https://api.notion.com/v1`）
-
-## 开发命令
+## 常用命令
 
 ```bash
-# 安装依赖
 pnpm install
-# 或
-just inst
-
-# 开发服务器（端口 5000）
-pnpm dev
-# 或
-just dev
-
-# 构建生产版本
-pnpm build
-# 或
-just build
-
-# 预览构建结果
-pnpm preview
+pnpm build:cli      # 构建 CLI -> cli-dist/cli.mjs
+pnpm dev            # 读取配置，启动开发服务器
+pnpm build          # 读取配置，生成 ./blogs.zip
+pnpm nblog ...      # 直接调用 CLI
 ```
 
-## 核心架构
+全局安装后可在任意目录运行：
 
-### 构建工具
+```bash
+nblog build /path/to/obsidian/blogs
+nblog build /path/to/obsidian/blogs -o ./out
+nblog build /path/to/obsidian/blogs --name weekly
+nblog build /path/to/obsidian/blogs --no-zip -o ./dist
+```
 
-- 使用 pnpm 代替npm
-- 使用just 运行命令 
+## 配置
 
-### Notion 数据集成
+配置文件可选。查找顺序：
 
-[serverUtils.ts](.vitepress/theme/serverUtils.ts) 提供两个核心函数：
+1. `--config <path>`
+2. 当前目录的 `nblog.config.json` 或 `.nblogrc`
+3. `~/.config/nblog/config.json` 或 `~/.nblogrc`
+4. 默认值
 
-- `getPosts(pageSize)`: 从 Notion 数据库获取所有状态为"发布"的文章
-  - 过滤条件：`properties.状态.select.equals = "发布"`
-  - 排序：按 `Last edited time` 降序
-  - 自动生成分页页面（每页 `pageSize` 篇文章）
+当前目录配置会覆盖用户级配置的同名字段。命令行参数优先于配置。
 
-- `getPageBlocks(pageId, last_edited_time)`: 获取文章的 Notion blocks 内容
-  - 实现缓存机制：基于 `last_edited_time` 判断是否使用缓存
-  - 缓存位置：`.vitepress/cache/{pageId}.json`
-  - 自动下载并缓存 Notion 图片到 `public/assets/images/`
+```json
+{
+  "source": "~/path/to/obsidian/blogs",
+  "output": "dist",
+  "name": "blogs",
+  "title": "Today",
+  "description": "vitepress,blog,blog-theme",
+  "base": "/",
+  "hostname": "https://blog.example.com",
+  "theme": "notion",
+  "port": 5000
+}
+```
 
-### VitePress 配置
+- `output`：zip 文件路径、zip 所在目录，或 `--no-zip` 时的输出目录。
+- `name`：zip 基础名，默认取源目录名。
+- `hostname`：填了才生成 sitemap。
 
-[config.ts](.vitepress/config.ts) 关键配置：
+## 文章属性约定
 
-- `transformPageData` 钩子：为 `posts/[id].md` 动态注入 Notion blocks 数据
-- `themeConfig.posts`: 在构建时通过 `getPosts()` 预加载文章列表
-- 分页配置：`pageSize = 10`（可调整）
+发布文章必须有：
 
-### 自定义主题组件
+- `title`：非空字符串
+- `published`：日期 `YYYY-MM-DD`，也接受带时间的 ISO 字符串
 
-[theme/index.ts](.vitepress/theme/index.ts) 扩展默认主题：
+`published` 是**唯一的发布开关**：
 
-- **Layout 组件**: `NewLayout.vue`
-- **页面组件**: `Page.vue`（首页列表）、`Archives.vue`、`Category.vue`、`Tags.vue`
-- **Notion 内容渲染**: `NContent.vue` 递归渲染 Notion blocks
-  - `NBlockOne`: 根 block 容器
-  - `NBlockParagraph`: 段落
-  - `NBlockHeading`: 标题
-  - `NBlockCode`: 代码块
-  - `NBlockImage`: 图片
-  - `NBlockBullet`: 列表项
-  - `NRichText`: 富文本内联样式
+- 有有效日期 → 构建，页面显示和排序都使用这个日期
+- 没有 `published`、空值、`false` → 草稿，不构建
+- 不支持 `published: true` / `false` 写法
 
-### 文章路由
+可选属性：
 
-- 首页：`/`（自动生成的 `index.md`）
-- 分页：`/page_2.md`、`/page_3.md` 等（根据文章数量自动生成）
-- 文章详情：`/posts/{notion_page_id}`，模板为 [posts/[id].md](posts/[id].md)
-  - URL 参数：`id`（Notion page ID）、`last_edited_time`、`title`
-  - `transformPageData` 将 Notion blocks 注入到 `page.blocks`
+- `tags`：YAML 数组
+- `category`：单个字符串
+- `description`：首页摘要
+- `created` / `updated`：Obsidian 维护，读取并保留，但不参与发布判断，默认不展示
 
-## Notion 数据库要求
+示例：
 
-Notion 数据库需要包含以下属性：
+```markdown
+---
+title: 我的文章
+published: 2024-01-01
+tags: [技术, Vue]
+category: 前端
+description: 文章简介
+created: 2024-01-01T10:00
+updated: 2024-01-02T11:00
+---
+```
 
-- `Title`: title 类型
-- `状态`: select 类型（值为"发布"时才会显示）
-- `Tags`: multi_select 类型
-- `Category`: select 类型
-- `Last edited time`: last_edited_time 类型（自动属性）
+## 输出规则
 
-## 缓存策略
+- **源目录可以嵌套，输出必须平铺。**
+- 嵌套路径进入 slug：
+  `教程/iOS App 实战系列/第一篇.md` → `posts/教程-ios-app-实战系列-第一篇.md`
+- 所有文章输出到 `posts/`，所有图片输出到 `public/images/`。
+- 图片文件名格式：`{postSlug}__{原相对路径用 - 展平}`。
+- 图片引用会做 URL 编码（空格、中文等）。
+- 图片资产目录约定：`{文章名}.md_assets/`，支持子目录。
+- 引用了但源目录不存在的图片会生成 1×1 占位图并打印警告。
+- 同名文章 slug / 图片名冲突时追加源路径短 hash，保证构建结果可重复。
+- zip 内部是 `dist` 的内容，没有额外的 `dist/` 层。
 
-1. **文章列表**：构建时从 Notion API 获取并写入 `themeConfig.posts`
-2. **文章内容**：按 pageId 缓存到 `.vitepress/cache/{pageId}.json`，根据 `last_edited_time` 判断是否更新
-3. **图片**：下载到 `public/assets/images/{blockId}__{filename}`，URL 重写为 `/assets/images/{blockId}__{filename}`
+## 构建流程
+
+1. 扫描 Obsidian 目录，按 `published` / `title` 过滤。
+2. 在系统临时目录创建唯一构建目录（`os.tmpdir()/nblog-XXXX`）。
+3. 复制 `template/`，写入 `package.json`（`"type": "module"`），生成文章和图片。
+4. 在构建目录创建 `node_modules` 软链，指向包自带的 `node_modules`，保证全局安装 / 任意 cwd 下能解析 `vitepress` 和 `vue`。
+5. VitePress 构建到 `buildDir/dist`。
+6. 等待 sitemap 写流完成（VitePress 1.6 的 sitemap 写流不会 await）。
+7. 用 `yazl` 把 `dist` 内容打包成 UTF-8 zip，或 `--no-zip` 时复制静态目录。
+8. 无论成功失败都清理临时构建目录。
+
+## 代码结构
+
+- `src/cli.ts`：Commander 入口，build/dev/init；临时目录、zip、输出路径
+- `src/scanner.ts`：扫描 Obsidian、校验 `published` / `title`、展平 slug、归一化 tags/category
+- `src/generate-config.ts`：复制模板、生成 `posts-data.json`、生成文章 Markdown、图片映射与复制
+- `src/obsidian-transform.ts`：callout、wikilink、图片嵌入、高亮、代码块保护
+- `src/config.ts`：配置查找与解析
+- `src/build.ts`：调用 VitePress `build` / `createServer`
+- `template/.vitepress/`：站点配置和主题
+- `bin/nblog.js` → `cli-dist/cli.mjs`
 
 ## 注意事项
 
-- 修改 `pageSize` 需要重新构建以重新生成分页页面
-- Notion API 有速率限制，大量文章时注意缓存机制
-- 图片下载是异步的（forEach），构建时可能需要等待或改用 Promise.all
-- `transformPageData` 中的 JSON 修复逻辑（`fixInvalidJSON`）用于处理某些边缘情况
+- zip 使用 `yazl`，不要改回调用系统 `zip`：macOS 的 zip 会让中文文件名在 Linux 上乱码。
+- 临时构建目录必须带 `node_modules` 软链，否则全局安装时解析不到 `vitepress`。
+- 临时构建目录必须有 `"type": "module"` 的 `package.json`，否则 Vite 会用 CJS 加载配置并报 ESM-only 错误。
+- `template/` 中统一使用 `frontMatter.published`，不要再引用 `frontMatter.date`。
+- 修改 CLI 源码后执行 `pnpm build:cli`；`prepare` 脚本也会在安装/打包时自动构建。
+- 不要自动执行 `git commit` / `git push`。

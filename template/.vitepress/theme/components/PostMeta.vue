@@ -1,8 +1,8 @@
 <template>
-  <div class="post-meta" v-if="metaData && metaData.date">
+  <div class="post-meta" v-if="metaData && metaData.published">
     <span class="meta-item">
       <span class="meta-label">时间：</span>
-      <span class="meta-value">{{ metaData.date }}</span>
+      <span class="meta-value">{{ metaData.published }}</span>
     </span>
     <span class="divider">|</span>
     <span class="meta-item">

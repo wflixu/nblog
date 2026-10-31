@@ -16,6 +16,6 @@ public/blocks-data/*
 .env
 .nblog-build
 cli-dist
-dist.zip
-nblog.config.json
+*.zip
+*.tgz
 .nblogrc

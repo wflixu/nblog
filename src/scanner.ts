@@ -1,10 +1,16 @@
 import fs from 'fs'
 import path from 'path'
+import crypto from 'crypto'
 import matter from 'gray-matter'
 
 export interface PostFrontMatter {
     title: string
-    date: string
+    /** 发布日期，YYYY-MM-DD；同时是唯一的发布开关 */
+    published: string
+    /** 创建时间，Obsidian 维护，可选 */
+    created: string
+    /** 更新时间，Obsidian 维护，可选 */
+    updated: string
     tags: string[]
     category: string
     description: string
@@ -20,14 +26,15 @@ export interface Post {
 }
 
 /**
- * 扫描目录，解析所有 .md 文件的 frontmatter
+ * 扫描目录，解析所有 .md 文件的 frontmatter。
  *
- * 标准字段（固定，无别名）：
- *   title       - 文章标题（必填）
- *   published   - 发布日期（必填，YYYY-MM-DD）
- *   tags        - 标签（可选，数组或逗号分隔）
- *   category    - 分类（可选）
- *   description - 简介（可选）
+ * 发布规则：
+ *   - published 必须是一个日期（YYYY-MM-DD 或带时间的 ISO 字符串），有值才构建；
+ *   - 没有 published / 空值 / false => 草稿，跳过；
+ *   - title 必填，缺失则跳过；
+ *   - tags / category / description / created / updated 可选。
+ *
+ * 嵌套目录会按相对路径展平进 slug，输出文件统一放在 posts/ 下。
  */
 export function scanPosts(dir: string): Post[] {
     const absDir = path.resolve(dir)
@@ -35,37 +42,46 @@ export function scanPosts(dir: string): Post[] {
         throw new Error(`Directory not found: ${absDir}`)
     }
 
-    const files = walkDir(absDir)
-    const mdFiles = files.filter(f => f.endsWith('.md'))
-
+    const mdFiles = walkDir(absDir).filter(f => f.toLowerCase().endsWith('.md'))
     const posts: Post[] = []
+    const drafts: string[] = []
+    const invalid: string[] = []
+    const usedSlugs = new Set<string>()
 
     for (const filePath of mdFiles) {
         const raw = fs.readFileSync(filePath, 'utf-8')
         const { data, content } = matter(raw)
+        const relativePath = path.relative(absDir, filePath)
 
-        // 必填：title + published
-        const title = data.title
-        const published = data.published
-
-        if (!title || !published) {
-            const relativePath = path.relative(absDir, filePath)
-            if (content.trim()) {
-                console.warn(`  ⚠ Skipped (no title/published): ${relativePath}`)
-            }
+        // published 缺失、空值、false => 草稿
+        if (isDraftValue(data.published)) {
+            if (content.trim()) drafts.push(relativePath)
             continue
         }
 
-        const relativePath = path.relative(absDir, filePath)
-        const slug = generateSlug(relativePath, title)
+        const published = parsePublishedDate(data.published)
+        if (!published) {
+            invalid.push(`${relativePath} (published 不是有效日期)`)
+            continue
+        }
+
+        const title = typeof data.title === 'string' ? data.title.trim() : ''
+        if (!title) {
+            invalid.push(`${relativePath} (缺少 title)`)
+            continue
+        }
+
+        const slug = uniqueSlug(generateSlug(relativePath, title), relativePath, usedSlugs)
 
         posts.push({
             frontMatter: {
                 title,
-                date: formatDate(published),
+                published,
+                created: normalizeDateTime(data.created),
+                updated: normalizeDateTime(data.updated),
                 tags: normalizeTags(data.tags),
-                category: data.category || '',
-                description: data.description || '',
+                category: normalizeCategory(data.category),
+                description: normalizeText(data.description),
             },
             regularPath: `/posts/${slug}`,
             slug,
@@ -74,8 +90,18 @@ export function scanPosts(dir: string): Post[] {
         })
     }
 
-    // 按日期降序排序
-    posts.sort((a, b) => new Date(b.frontMatter.date).getTime() - new Date(a.frontMatter.date).getTime())
+    posts.sort((a, b) => {
+        const byDate = b.frontMatter.published.localeCompare(a.frontMatter.published)
+        if (byDate !== 0) return byDate
+        return a.frontMatter.title.localeCompare(b.frontMatter.title, 'zh-CN')
+    })
+
+    if (drafts.length > 0) {
+        console.log(`  · ${drafts.length} draft(s) without published: skipped`)
+    }
+    for (const item of invalid) {
+        console.warn(`  ⚠ Skipped: ${item}`)
+    }
 
     return posts
 }
@@ -102,53 +128,137 @@ function walkDir(dir: string): string[] {
 }
 
 /**
- * 生成 URL slug
- * 优先使用文件名，去掉扩展名和目录前缀
+ * 嵌套目录展平：
+ *   教程/iOS App 实战系列/第一篇.md -> 教程-ios-app-实战系列-第一篇
  */
 function generateSlug(relativePath: string, title: string): string {
-    // 使用文件名（不含扩展名）作为 slug
-    const basename = path.basename(relativePath, '.md')
-    return basename
+    const segments = relativePath.replace(/\.md$/i, '').split(/[\\/]/)
+    const slug = segments.map(slugify).filter(Boolean).join('-')
+    return slug || slugify(title) || hashString(relativePath).slice(0, 8)
+}
+
+function slugify(value: string): string {
+    return value
         .toLowerCase()
         .replace(/\s+/g, '-')
         .replace(/[^\w一-鿿-]/g, '')
         .replace(/-+/g, '-')
-        .replace(/^-|-$/g, '') || encodeURIComponent(title)
+        .replace(/^-|-$/g, '')
 }
 
 /**
- * 标准化日期格式为 YYYY-MM-DD
+ * 冲突时追加相对路径的短 hash，保证输出稳定
  */
-function formatDate(date: any): string {
-    if (!date) return ''
-    if (date instanceof Date) {
-        const y = date.getFullYear()
-        const m = String(date.getMonth() + 1).padStart(2, '0')
-        const d = String(date.getDate()).padStart(2, '0')
-        return `${y}-${m}-${d}`
-    }
-    if (typeof date === 'string') {
-        if (/^\d{4}-\d{2}-\d{2}$/.test(date)) return date
-        const d = new Date(date)
-        if (!isNaN(d.getTime())) {
-            const y = d.getFullYear()
-            const m = String(d.getMonth() + 1).padStart(2, '0')
-            const day = String(d.getDate()).padStart(2, '0')
-            return `${y}-${m}-${day}`
+function uniqueSlug(base: string, relativePath: string, used: Set<string>): string {
+    let slug = base
+    let key = slug.toLowerCase()
+    if (used.has(key)) {
+        const suffix = hashString(relativePath).slice(0, 6)
+        slug = `${base}-${suffix}`
+        key = slug.toLowerCase()
+        let i = 2
+        while (used.has(key)) {
+            slug = `${base}-${suffix}-${i++}`
+            key = slug.toLowerCase()
         }
-        return date
     }
-    return String(date)
+    used.add(key)
+    return slug
+}
+
+function hashString(value: string): string {
+    return crypto.createHash('sha1').update(value).digest('hex')
+}
+
+function isDraftValue(value: any): boolean {
+    return value === undefined || value === null || value === '' || value === false
 }
 
 /**
- * 标准化 tags 为字符串数组
+ * published 只接受日期 / 日期时间；true、false、无效字符串一律返回 null
+ */
+function parsePublishedDate(value: any): string | null {
+    if (value instanceof Date) {
+        return isNaN(value.getTime()) ? null : formatDate(value)
+    }
+    if (typeof value === 'string') {
+        const text = value.trim()
+        if (!text) return null
+
+        const dateOnly = text.match(/^(\d{4})-(\d{2})-(\d{2})(?:[T\s].*)?$/)
+        if (dateOnly) {
+            const y = Number(dateOnly[1])
+            const m = Number(dateOnly[2])
+            const d = Number(dateOnly[3])
+            return isValidDateParts(y, m, d)
+                ? `${dateOnly[1]}-${dateOnly[2]}-${dateOnly[3]}`
+                : null
+        }
+
+        const parsed = new Date(text)
+        return isNaN(parsed.getTime()) ? null : formatDate(parsed)
+    }
+    return null
+}
+
+function isValidDateParts(y: number, m: number, d: number): boolean {
+    const dt = new Date(Date.UTC(y, m - 1, d))
+    return dt.getUTCFullYear() === y && dt.getUTCMonth() === m - 1 && dt.getUTCDate() === d
+}
+
+/**
+ * 格式化为 YYYY-MM-DD。Date 对象使用 UTC，避免 YAML 日期在时区边界偏移。
+ */
+function formatDate(date: Date): string {
+    const y = date.getUTCFullYear()
+    const m = String(date.getUTCMonth() + 1).padStart(2, '0')
+    const d = String(date.getUTCDate()).padStart(2, '0')
+    return `${y}-${m}-${d}`
+}
+
+/**
+ * created / updated 只做保留，不参与发布判断
+ */
+function normalizeDateTime(value: any): string {
+    if (value instanceof Date) {
+        return isNaN(value.getTime()) ? '' : value.toISOString().slice(0, 16)
+    }
+    if (typeof value === 'string') return value.trim()
+    return ''
+}
+
+/**
+ * 标准化 tags 为字符串数组：去空格、去空值、去重
  */
 function normalizeTags(tags: any): string[] {
-    if (!tags) return []
-    if (Array.isArray(tags)) return tags.map(String)
-    if (typeof tags === 'string') {
-        return tags.split(',').map(t => t.trim()).filter(Boolean)
+    let values: string[] = []
+
+    if (Array.isArray(tags)) {
+        values = tags.map(t => String(t).trim())
+    } else if (typeof tags === 'string') {
+        values = tags.split(',').map(t => t.trim())
+    } else if (tags !== undefined && tags !== null) {
+        values = [String(tags).trim()]
     }
-    return []
+
+    const result: string[] = []
+    const seen = new Set<string>()
+    for (const value of values) {
+        if (!value || seen.has(value)) continue
+        seen.add(value)
+        result.push(value)
+    }
+    return result
+}
+
+/**
+ * 分类只保留单个字符串，并去掉末尾的逗号/分号
+ */
+function normalizeCategory(value: any): string {
+    if (typeof value !== 'string') return ''
+    return value.trim().replace(/[,，;；\s]+$/g, '').trim()
+}
+
+function normalizeText(value: any): string {
+    return typeof value === 'string' ? value.trim() : ''
 }

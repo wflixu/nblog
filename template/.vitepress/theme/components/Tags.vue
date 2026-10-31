@@ -15,7 +15,7 @@
             <div class="post-dot"></div>
             {{ article.frontMatter.title }}
         </div>
-        <div class="date">{{ article.frontMatter.date }}</div>
+        <div class="date">{{ article.frontMatter.published }}</div>
     </a>
 </template>
 <script lang="ts" setup>

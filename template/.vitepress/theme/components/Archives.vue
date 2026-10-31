@@ -1,14 +1,14 @@
 <template>
     <div v-for="yearList in data">
         <div class="year">
-            {{ yearList[0].frontMatter.date.split('-')[0] }}
+            {{ yearList[0].frontMatter.published.split('-')[0] }}
         </div>
         <a :href="withBase(article.regularPath)" v-for="(article, index) in yearList" :key="index" class="posts">
             <div class="post-container">
                 <div class="post-dot"></div>
                 {{ article.frontMatter.title }}
             </div>
-            <div class="date">{{ article.frontMatter.date.slice(5) }}</div>
+            <div class="date">{{ article.frontMatter.published.slice(5) }}</div>
         </a>
     </div>
 </template>

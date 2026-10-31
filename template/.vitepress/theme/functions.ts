@@ -1,6 +1,6 @@
 type Post = {
     frontMatter: {
-        date: string
+        published: string
         title: string
         category: string
         tags: string[]
@@ -51,8 +51,8 @@ export function useYearSort(post: Post[]) {
     let num = -1
     for (let index = 0; index < post.length; index++) {
         const element = post[index]
-        if (element.frontMatter.date) {
-            const y = element.frontMatter.date.split('-')[0]
+        if (element.frontMatter.published) {
+            const y = element.frontMatter.published.split('-')[0]
             if (y === year) {
                 data[num].push(element)
             } else {

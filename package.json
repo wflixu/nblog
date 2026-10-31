@@ -12,39 +12,43 @@
     "template"
   ],
   "scripts": {
-    "dev": "vitepress dev --host 0.0.0.0",
-    "build": "vitepress build",
-    "preview": "vitepress preview",
-    "clean": "rm -rf .vitepress/cache public/blocks-data/*",
+    "dev": "node bin/nblog.js dev",
+    "build": "node bin/nblog.js build",
+    "clean": "rm -rf .nblog-build dist",
     "build:cli": "tsdown",
     "dev:cli": "tsdown --watch",
+    "prepare": "tsdown",
     "nblog": "node bin/nblog.js"
   },
-  "keywords": ["blog", "obsidian", "vitepress", "cli", "static-site"],
+  "keywords": [
+    "blog",
+    "obsidian",
+    "vitepress",
+    "cli",
+    "static-site"
+  ],
   "author": "wflixu",
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^24.10.4",
+    "@types/yazl": "^3.3.1",
     "@typescript-eslint/eslint-plugin": "^8.51.0",
     "@typescript-eslint/parser": "^8.51.0",
     "@typescript-eslint/types": "^8.51.0",
     "@vue/compiler-sfc": "^3.5.26",
-    "axios": "^1.13.2",
-    "dotenv": "^17.2.3",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
     "eslint-plugin-vue": "^10.6.2",
-    "flatted": "^3.3.3",
-    "globby": "^16.1.0",
     "prettier": "^3.7.4",
-    "shiki": "^3.20.0",
     "tsdown": "^0.22.3",
     "typescript": "^5.9.3"
   },
   "dependencies": {
     "commander": "^15.0.0",
     "gray-matter": "^4.0.3",
-    "vitepress": "^1.6.4"
+    "vitepress": "^1.6.4",
+    "vue": "^3.5.26",
+    "yazl": "^3.3.1"
   }
 }

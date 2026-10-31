@@ -1,9 +1,10 @@
 import fs from 'fs'
 import path from 'path'
+import os from 'os'
 
 /**
  * nblog 配置文件接口
- * 支持 nblog.config.json 和 .nblogrc 两种格式
+ * 支持 nblog.config.json 和 .nblogrc
  */
 export interface NblogConfig {
     /** Obsidian 博客目录路径 */
@@ -18,16 +19,34 @@ export interface NblogConfig {
     hostname?: string
     /** 主题名称 (notion | claude-docs) */
     theme?: string
-    /** 输出目录（仅 build） */
+    /** 输出路径：zip 文件、zip 所在目录，或 --no-zip 时的目录 */
     output?: string
+    /** zip 基础名，默认取源目录名 */
+    name?: string
     /** 开发服务器端口（仅 dev） */
     port?: number
 }
 
-const CONFIG_FILES = ['nblog.config.json', '.nblogrc']
+const LOCAL_CONFIG_FILES = ['nblog.config.json', '.nblogrc']
 
 /**
- * 从当前目录或指定路径加载配置文件
+ * 用户级配置路径，按优先级排列
+ */
+function userConfigPaths(): string[] {
+    return [
+        path.join(os.homedir(), '.config', 'nblog', 'config.json'),
+        path.join(os.homedir(), '.nblogrc'),
+    ]
+}
+
+/**
+ * 加载配置：
+ *   1. --config 显式指定
+ *   2. 当前目录的 nblog.config.json / .nblogrc
+ *   3. ~/.config/nblog/config.json 或 ~/.nblogrc
+ *   4. 默认值
+ *
+ * 当前目录配置会覆盖用户级配置的同名字段。
  */
 export function loadConfig(configPath?: string): NblogConfig {
     if (configPath) {
@@ -38,28 +57,30 @@ export function loadConfig(configPath?: string): NblogConfig {
         return parseConfig(fs.readFileSync(absPath, 'utf-8'), absPath)
     }
 
-    // 从当前目录向上查找配置文件
-    let cwd = process.cwd()
-    while (true) {
-        for (const name of CONFIG_FILES) {
-            const filePath = path.join(cwd, name)
-            if (fs.existsSync(filePath)) {
-                const raw = fs.readFileSync(filePath, 'utf-8')
-                return parseConfig(raw, filePath)
-            }
+    // 用户级默认配置
+    let config: NblogConfig = {}
+    for (const filePath of userConfigPaths()) {
+        if (fs.existsSync(filePath)) {
+            config = parseConfig(fs.readFileSync(filePath, 'utf-8'), filePath)
+            break
         }
-        const parent = path.dirname(cwd)
-        if (parent === cwd) break // 到根目录了
-        cwd = parent
     }
 
-    return {}
+    // 当前目录配置覆盖用户级配置
+    for (const name of LOCAL_CONFIG_FILES) {
+        const filePath = path.resolve(process.cwd(), name)
+        if (fs.existsSync(filePath)) {
+            const local = parseConfig(fs.readFileSync(filePath, 'utf-8'), filePath)
+            return { ...config, ...local }
+        }
+    }
+
+    return config
 }
 
 function parseConfig(raw: string, filePath: string): NblogConfig {
     try {
         const config = JSON.parse(raw)
-        // 解析字段
         return {
             source: config.source || config.dir || undefined,
             title: config.title || undefined,
@@ -68,6 +89,7 @@ function parseConfig(raw: string, filePath: string): NblogConfig {
             hostname: config.hostname || undefined,
             theme: config.theme || undefined,
             output: config.output || undefined,
+            name: config.name || undefined,
             port: config.port ? Number(config.port) : undefined,
         }
     } catch (err) {
@@ -92,6 +114,7 @@ export function writeConfig(config: NblogConfig, filePath?: string): string {
     if (config.hostname) data.hostname = config.hostname
     if (config.theme && config.theme !== 'notion') data.theme = config.theme
     if (config.output) data.output = config.output
+    if (config.name) data.name = config.name
     if (config.port && config.port !== 5000) data.port = config.port
 
     fs.writeFileSync(targetPath, JSON.stringify(data, null, 2) + '\n', 'utf-8')

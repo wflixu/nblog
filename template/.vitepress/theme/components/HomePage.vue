@@ -9,7 +9,7 @@
       </div>
       <p class="describe" v-html="article.frontMatter.description"></p>
       <div class='post-info'>
-        {{ article.frontMatter.date }}
+        {{ article.frontMatter.published }}
         <span v-if="article.frontMatter.category" class="category">
           <a :href="withBase(`/pages/category.html?category=${article.frontMatter.category}`)">
             {{ article.frontMatter.category }}
@@ -48,7 +48,7 @@ interface Article {
   frontMatter: {
     title: string
     description: string
-    date: string
+    published: string
     tags: string[]
     category?: string
   }
