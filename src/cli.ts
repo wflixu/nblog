@@ -54,7 +54,10 @@ function expandHome(p: string): string {
  * 在系统临时目录创建唯一的构建目录，避免污染全局包目录。
  */
 function makeTempBuildDir(): string {
-    return fs.mkdtempSync(path.join(os.tmpdir(), 'nblog-'))
+    // macOS 的 os.tmpdir() 是 /var/folders/...，Vite 会解析成 /private/var/...
+    // 先 realpath，保证 dev server 的 Vite root 和实际文件路径一致。
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'nblog-'))
+    return fs.realpathSync(dir)
 }
 
 /**

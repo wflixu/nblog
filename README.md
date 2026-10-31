@@ -109,6 +109,8 @@ assets/...
 | `--description <desc>` | 站点描述 | `A blog powered by nblog` |
 | `--theme <theme>` | 主题名称 | `notion` |
 
+> macOS 的「隔空播放接收器」默认占用 5000 端口。如果启动时报端口冲突，使用 `--port 5001`，或关闭「系统设置 → 通用 → 隔空播放与接力 → 隔空播放接收器」。
+
 ### `nblog init [dir]`
 
 在当前目录生成 `nblog.config.json`。

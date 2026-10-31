@@ -5,5 +5,5 @@
   "base": "/",
   "hostname": "https://blog.wflixu.cn",
   "theme": "notion",
-  "port": 5000
+  "port": 5001
 }
