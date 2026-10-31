@@ -16,8 +16,24 @@ aside: false
 
 ---
 
+## 开源项目
 
+-   **[RClick](https://github.com/wflixu/RClick)** — macOS Finder 右键增强工具 · 1.1k stars
+-   **[typster](https://github.com/wflixu/typster)** — Typst 阅读器 / 编辑器 · 65 stars
+-   **[iMonet](https://github.com/wflixu/iMonet)** — 以鼠标为中心的 macOS 图片查看器 · 29 stars
+-   **[FinderSyncer](https://github.com/wflixu/FinderSyncer)** — macOS Finder 同步扩展开关 · 29 stars
+-   **[ntab](https://github.com/wflixu/ntab)** — Chrome 新标签页扩展 · 13 stars
+-   **[nblog](https://github.com/wflixu/nblog)** — Obsidian → VitePress 博客构建工具 · 12 stars
 
+## 我的产品
+
+-   **[iMonet - 图片查看器](https://apps.apple.com/cn/app/imonet-%E5%9B%BE%E7%89%87%E6%9F%A5%E7%9C%8B%E5%99%A8/id6770070921?mt=12)** — 🖼️ 以鼠标为中心的 macOS 图片查看器
+-   **[LiveCam](https://apps.apple.com/cn/app/livecam/id6476108478?mt=12)** — 📷 录屏时显示头像
+-   **[RClick](https://apps.apple.com/cn/app/rclick/id6496849273?mt=12)** — 🖱️ macOS Finder 右键增强工具
+
+---
+
+## 技术栈
 
 ### 前端
 
@@ -40,7 +56,6 @@ aside: false
   <img src="https://img.shields.io/badge/-Bootstrap-7952B3?logo=Bootstrap&logoColor=FFF" alt="BootStrap" style="display: inline-block;" />&nbsp;
 </p>
 
-
 ### 后端
 
 <p>
@@ -51,8 +66,6 @@ aside: false
   <img src="https://img.shields.io/badge/-PostgreSQL-C0C0C0?logo=PostgreSQL&logoColor=4169E1" alt="PostgreSQL" style="display: inline-block;" />&nbsp;
   <img src="https://img.shields.io/badge/-Node.js-D3D3D3?logo=Node.js&logoColor=339933" alt="Node.js" style="display: inline-block;" />&nbsp;
 </p>
-
-
 
 ### 开发工具
 
@@ -67,4 +80,3 @@ aside: false
   <img src="https://img.shields.io/badge/-PyCharm-C0C0C0?logo=PyCharm&logoColor=000" alt="PyCharm" style="display: inline-block;" />&nbsp;
 <img src="https://img.shields.io/badge/-Docker-2496ED?logo=Docker&logoColor=FFF" alt="Docker" style="display: inline-block;" />&nbsp;
 </p>
-
