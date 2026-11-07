@@ -100,11 +100,17 @@ export function prepareBuildDir(
 
     let copiedImages = 0
     let placeholderCount = 0
+    const generatedPosts: GeneratedPost[] = []
 
     for (const post of posts) {
         const assets = buildAssetMap(post)
-        const md = generatePostMarkdown(post, assets, linkMap)
-        fs.writeFileSync(path.join(postsDir, `${post.slug}.md`), md, 'utf-8')
+        const content = transformPostContent(post, assets, linkMap)
+        fs.writeFileSync(
+            path.join(postsDir, `${post.slug}.md`),
+            renderPostMarkdown(post, content),
+            'utf-8'
+        )
+        generatedPosts.push({ post, content })
         copiedImages += copyPostAssets(assets, imagesDir)
         placeholderCount += createPlaceholderImages(assets, imagesDir)
     }
@@ -119,17 +125,36 @@ export function prepareBuildDir(
     // 写入站点配置
     writeSiteConfig(buildDir, config)
 
+    // 生成 llms.txt / llms-full.txt，供大模型抓取
+    writeLlmsFiles(buildDir, generatedPosts, config)
+
     return buildDir
 }
 
+interface GeneratedPost {
+    post: Post
+    /** 已转换 Obsidian 语法的正文（不含 frontmatter） */
+    content: string
+}
+
 /**
- * 生成单篇文章的 Markdown
+ * 转换单篇文章的 Obsidian 语法
  */
-function generatePostMarkdown(
+function transformPostContent(
     post: Post,
     assets: AssetMap,
     linkMap: Map<string, string>
 ): string {
+    return transformObsidianSyntax(post.content, {
+        resolveImage: (filename) => resolveAssetName(assets, post.slug, filename),
+        resolvePostLink: (target) => linkMap.get(target.trim().toLowerCase()),
+    })
+}
+
+/**
+ * 生成单篇文章的 Markdown 文件
+ */
+function renderPostMarkdown(post: Post, content: string): string {
     const frontmatter = [
         '---',
         `title: ${yamlString(post.frontMatter.title)}`,
@@ -160,12 +185,6 @@ function generatePostMarkdown(
 
     frontmatter.push('---')
     frontmatter.push('')
-
-    // 转换 Obsidian 语法；图片和 wikilink 使用当前构建的映射
-    const content = transformObsidianSyntax(post.content, {
-        resolveImage: (filename) => resolveAssetName(assets, post.slug, filename),
-        resolvePostLink: (target) => linkMap.get(target.trim().toLowerCase()),
-    })
 
     return frontmatter.join('\n') + '\n' + content
 }
@@ -207,6 +226,168 @@ function writeSiteConfig(buildDir: string, config: SiteConfig): void {
     }
 
     fs.writeFileSync(configPath, configContent, 'utf-8')
+}
+
+/**
+ * 生成 llms.txt 和 llms-full.txt，写入 public/，
+ * VitePress 构建时会原样复制到 dist 根目录。
+ *
+ * llms.txt 遵循 https://llmstxt.org/ 约定：
+ * H1 站点名 + 引用块简介 + H2 分组的链接列表。
+ */
+function writeLlmsFiles(
+    buildDir: string,
+    posts: GeneratedPost[],
+    config: SiteConfig
+): void {
+    if (posts.length === 0) return
+
+    const publicDir = path.join(buildDir, 'public')
+    fs.mkdirSync(publicDir, { recursive: true })
+
+    fs.writeFileSync(
+        path.join(publicDir, 'llms.txt'),
+        generateLlmsTxt(posts, config),
+        'utf-8'
+    )
+    fs.writeFileSync(
+        path.join(publicDir, 'llms-full.txt'),
+        generateLlmsFullTxt(posts, config),
+        'utf-8'
+    )
+}
+
+/**
+ * llms.txt：站点索引，按分类列出所有已发布文章
+ */
+function generateLlmsTxt(posts: GeneratedPost[], config: SiteConfig): string {
+    const lines: string[] = []
+
+    lines.push(`# ${oneLine(config.title) || 'Blog'}`, '')
+    lines.push(`> ${oneLine(config.description) || 'A blog powered by nblog'}`, '')
+    lines.push(
+        `This site contains ${posts.length} published post${posts.length === 1 ? '' : 's'}.`,
+        ''
+    )
+
+    // VitePress 默认 cleanUrls: false，静态文件带 .html 后缀
+    lines.push('## Pages', '')
+    lines.push(`- [Home](${siteUrl(config, '')}): Latest posts`)
+    lines.push(`- [Archives](${siteUrl(config, 'pages/archives.html')}): Posts grouped by date`)
+    lines.push(`- [Categories](${siteUrl(config, 'pages/category.html')}): Posts grouped by category`)
+    lines.push(`- [Tags](${siteUrl(config, 'pages/tags.html')}): Posts grouped by tag`)
+    lines.push('')
+
+    for (const [heading, items] of groupPostsByCategory(posts)) {
+        lines.push(`## ${heading}`, '')
+        for (const { post } of items) {
+            const fm = post.frontMatter
+            const description = fm.description ? `: ${summarize(fm.description)}` : ''
+            lines.push(
+                `- [${escapeLinkText(fm.title)}](${postUrl(config, post)}) (${fm.published})${description}`
+            )
+        }
+        lines.push('')
+    }
+
+    lines.push('## Optional', '')
+    lines.push(
+        `- [Full text](${siteUrl(config, 'llms-full.txt')}): All published posts in a single Markdown file`
+    )
+
+    return lines.join('\n') + '\n'
+}
+
+/**
+ * llms-full.txt：所有文章的完整正文合并成一个文件
+ */
+function generateLlmsFullTxt(posts: GeneratedPost[], config: SiteConfig): string {
+    const lines: string[] = []
+
+    lines.push(`# ${oneLine(config.title) || 'Blog'}`, '')
+    lines.push(`> ${oneLine(config.description) || 'A blog powered by nblog'}`, '')
+    lines.push(
+        `This file contains the full text of ${posts.length} published post${posts.length === 1 ? '' : 's'}.`,
+        ''
+    )
+
+    for (const { post, content } of posts) {
+        const fm = post.frontMatter
+        lines.push(`## ${oneLine(fm.title)}`, '')
+        lines.push(`- Published: ${fm.published}`)
+        if (fm.category) lines.push(`- Category: ${oneLine(fm.category)}`)
+        if (fm.tags.length > 0) {
+            lines.push(`- Tags: ${fm.tags.map(oneLine).join(', ')}`)
+        }
+        lines.push(`- URL: ${postUrl(config, post)}`)
+        lines.push('')
+        lines.push(rewriteInternalLinks(content).trim(), '')
+    }
+
+    return lines.join('\n').trimEnd() + '\n'
+}
+
+/**
+ * 按分类分组；没有分类的文章归入 Posts
+ */
+function groupPostsByCategory(posts: GeneratedPost[]): [string, GeneratedPost[]][] {
+    const groups = new Map<string, GeneratedPost[]>()
+
+    for (const item of posts) {
+        const category = oneLine(item.post.frontMatter.category) || 'Posts'
+        const group = groups.get(category)
+        if (group) {
+            group.push(item)
+        } else {
+            groups.set(category, [item])
+        }
+    }
+
+    return [...groups.entries()]
+}
+
+/**
+ * 部署根路径，始终带前后斜杠："/" 或 "/blog/"
+ */
+function normalizeBasePath(base: string): string {
+    const trimmed = (base || '/').trim().replace(/^\/+|\/+$/g, '')
+    return trimmed ? `/${trimmed}/` : '/'
+}
+
+/**
+ * 生成站点内链接。配置了 hostname 时输出绝对地址，否则输出带 base 的站内路径。
+ */
+function siteUrl(config: SiteConfig, pathname: string): string {
+    const path = `${normalizeBasePath(config.base)}${pathname.replace(/^\/+/, '')}`
+    if (!config.hostname) return path
+    return config.hostname.replace(/\/+$/, '') + path
+}
+
+function postUrl(config: SiteConfig, post: Post): string {
+    return siteUrl(config, `posts/${encodeURIComponent(post.slug)}.html`)
+}
+
+/**
+ * llms-full.txt 直接输出 Markdown 正文，不经过 VitePress 的链接处理，
+ * 需要手动给站内文章链接补上 .html。
+ */
+function rewriteInternalLinks(content: string): string {
+    return content.replace(/\(\/posts\/([^)\s#]+)\)/g, (match, path: string) => {
+        return path.endsWith('.html') ? match : `(/posts/${path}.html)`
+    })
+}
+
+function oneLine(value: string): string {
+    return value.replace(/\s+/g, ' ').trim()
+}
+
+function summarize(value: string, max = 200): string {
+    const text = oneLine(value)
+    return text.length > max ? `${text.slice(0, max - 1)}…` : text
+}
+
+function escapeLinkText(value: string): string {
+    return oneLine(value).replace(/[[\]]/g, '\\$&')
 }
 
 /**

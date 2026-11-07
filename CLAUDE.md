@@ -100,6 +100,7 @@ updated: 2024-01-02T11:00
 - 嵌套路径进入 slug：
   `教程/iOS App 实战系列/第一篇.md` → `posts/教程-ios-app-实战系列-第一篇.md`
 - 所有文章输出到 `posts/`，所有图片输出到 `public/images/`。
+- 构建时在 `public/` 生成 `llms.txt`（站点索引，按分类分组）和 `llms-full.txt`（全部文章正文），随 `dist` 一起输出。
 - 图片文件名格式：`{postSlug}__{原相对路径用 - 展平}`。
 - 图片引用会做 URL 编码（空格、中文等）。
 - 图片资产目录约定：`{文章名}.md_assets/`，支持子目录。

@@ -1,6 +1,6 @@
 # nblog
 
-A CLI tool to build a static blog zip from Obsidian markdown files.
+Build a VitePress blog from your Obsidian vault. CLI with deployable zip output.
 
 [Live Demo](http://blog.wflixu.cn)
 
@@ -92,10 +92,19 @@ zip 内部是 `dist` 的**内容**，没有额外的 `dist/` 层：
 index.html
 404.html
 sitemap.xml
+llms.txt
+llms-full.txt
 posts/...
 images/...
 assets/...
 ```
+
+每次构建还会生成两个面向大模型的描述文件：
+
+- `llms.txt`：遵循 [llms.txt 约定](https://llmstxt.org/)，包含站点简介和按分类分组的文章链接。
+- `llms-full.txt`：所有已发布文章的完整正文，合并成一个 Markdown 文件。
+
+配置了 `hostname` 时链接使用绝对地址，否则使用带 `base` 的站内路径。
 
 ### `nblog dev [dir]`
 
