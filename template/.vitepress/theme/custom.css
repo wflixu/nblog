@@ -103,6 +103,25 @@ h2 {
     color: var(--vp-c-text-1);
 }
 
+/* 标题锚点：跟随标题的 padding-top，避免 hover 时 # 与文字错行 */
+.vp-doc h1 .header-anchor {
+    top: 4px;
+}
+
+.vp-doc h2 .header-anchor {
+    top: 4px;
+}
+
+.vp-doc h3 .header-anchor {
+    top: 2px;
+}
+
+/* 锚点颜色跟随标题文字，不继承链接的蓝色 */
+.theme-notion .vp-doc .header-anchor,
+.theme-claude-docs .vp-doc .header-anchor {
+    color: var(--vp-c-text-1);
+}
+
 .page {
     background-color: var(--vp-c-bg-soft);
 }

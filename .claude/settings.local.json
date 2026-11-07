@@ -26,7 +26,25 @@
       "Bash(find:*)",
       "Bash(git rm:*)",
       "Bash(pnpm dev:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "WebFetch(domain:www.notion.com)",
+      "WebFetch(domain:developers.notion.com)",
+      "mcp__chrome-devtools__navigate_page",
+      "mcp__chrome-devtools__take_snapshot",
+      "mcp__chrome-devtools__click",
+      "mcp__chrome-devtools__evaluate_script",
+      "mcp__chrome-devtools__list_pages",
+      "mcp__chrome-devtools__new_page",
+      "mcp__chrome-devtools__list_console_messages",
+      "Bash(git diff:*)",
+      "mcp__chrome-devtools__take_screenshot",
+      "Bash(lsof -ti:5001)",
+      "Bash(xargs kill:*)",
+      "mcp__chrome-devtools__wait_for",
+      "mcp__chrome-devtools__get_console_message",
+      "Bash(pnpm build:cli *)",
+      "Bash(node *)",
+      "Bash(python3 *)"
     ]
   }
 }
